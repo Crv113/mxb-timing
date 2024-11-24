@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import './tailwind.css'; 
+import './App.css'; 
+import Sidebar from "./layouts/Sidebar";
+import Home from "./pages/Home";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Events from "./pages/Events";
+import Event from "./pages/Event";
+import {Settings} from "luxon";
 
 function App() {
+    Settings.defaultLocale = 'en';
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reloadas.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+          <div className="flex h-screen font-sans">
+              <Sidebar />
+              <div className="flex-1 p-5 bg-white">
+                  <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/events" element={<Events />} />
+                      <Route path="/event/:id" element={<Event />} />
+                      <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+                  </Routes>
+              </div>
+          </div>
+      </BrowserRouter>
   );
 }
 
