@@ -7,7 +7,7 @@ const SidebarItem = ({ icon: Icon, to, children }) => {
             to={to}
             className={({ isActive }) =>
                 `flex items-center space-x-3 px-4 py-2 text-sm ${
-                    isActive ? 'text-red-500' : 'hover:text-slate-900 hover:cursor-pointer text-slate-500'
+                    isActive ? 'text-red-600' : 'text-neutral-600 hover:text-neutral-950 hover:cursor-pointer'
                 }`
             }
         >

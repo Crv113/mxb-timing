@@ -35,8 +35,8 @@ const EventCard = ({ event, status = 'current'}) => {
 
     return (
         <Link to={to}>
-            <li className={`${opacity} bg-gray-100 rounded-lg shadow w-80 p-6 border relative cursor-default
-             ${disabled ? '' : 'hover:border-slate-500 transition-colors hover:cursor-pointer hover:shadow-lg transition-shadow duration-300'}`
+            <li className={`${opacity} bg-neutral-100 rounded-lg shadow w-80 p-6 border relative cursor-default
+             ${disabled ? '' : 'hover:border-neutral-400 transition-colors hover:cursor-pointer hover:shadow-lg transition-shadow duration-300'}`
             }>
                 <div className="flex items-center gap-2">
                     <GrStatusGoodSmall className={statusColor} />

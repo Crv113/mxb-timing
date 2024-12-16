@@ -32,3 +32,27 @@
     font-family: 'outfitBlack';
     src: url('./assets/fonts/outfit/Outfit-Black.ttf') format('truetype')
 }
+
+.text-xxs {
+    font-size: 0.6rem;
+}
+
+.bg-ktm {
+    background-color: rgb(253, 186, 116);
+    color: rgb(154, 52, 18)
+}
+
+.bg-yamaha {
+    background-color: rgb(59, 130, 246);
+    color: rgb(30, 58, 138)
+}
+
+.bg-husqvarna, .bg-fantic  {
+    background-color: rgb(212, 212, 212);
+    color: rgb(38, 38, 38);
+}
+
+.bg-honda {
+    background-color: rgb(239, 68, 68);
+    color: rgb(153, 27, 27);
+}
