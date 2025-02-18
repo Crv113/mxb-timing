@@ -9,21 +9,24 @@ const MobileLapTimeTable = ({lapTimes, convertTime}) => {
                 <div className="overflow-x-auto sm:rounded-2xl border text-xs w-full">
                     <table className="w-full border-collapse">
                         <thead className="border-b bg-neutral-50">
-                        <tr className="bg-blue-gray-100 text-gray-700">
-                            <th className="w-1/3 text-left pl-2">Name</th>
-                            <th className="w-1/3 text-center">Time</th>
-                            <th className="w-1/3 text-right pr-2">Bike</th>
-                        </tr>
-                        <tr className="text-xs text-neutral-400">
-                            <th className="w-1/3 text-left pl-2">Sector 1</th>
-                            <th className="w-1/3 text-center">Sector 2</th>
-                            <th className="w-1/3 text-right pr-2">Sector 3</th>
-                        </tr>
+                            <tr className="bg-blue-gray-100 text-gray-700">
+                                <th></th>
+                                <th className="w-1/3 text-left pl-2">Name</th>
+                                <th className="w-1/3 text-center">Time</th>
+                                <th className="w-1/3 text-right pr-2">Bike</th>
+                            </tr>
+                            <tr className="text-xs text-neutral-400">
+                                <th></th>
+                                <th className="w-1/3 text-left pl-2">Sector 1</th>
+                                <th className="w-1/3 text-center">Sector 2</th>
+                                <th className="w-1/3 text-right pr-2">Sector 3</th>
+                            </tr>
                         </thead>
                         <tbody className="text-blue-gray-900 hover:cursor-default">
-                        {lapTimes.data.map(lapTime => (
+                        {lapTimes.data.map((lapTime, index) => (
                             <>
                                 <tr key={lapTime.id}>
+                                    <td className="text-left pl-2">{index + 1}</td>
                                     <td className="w-1/3 text-left pl-2">{truncateString(lapTime.player_name)}</td>
                                     <td className="w-1/3 text-center font-semibold">{convertTime(lapTime.lap_time)}</td>
                                     <td className="w-1/3 text-right pr-2">
@@ -36,6 +39,7 @@ const MobileLapTimeTable = ({lapTimes, convertTime}) => {
                                     </td>
                                 </tr>
                                 <tr className="border-b border-blue-gray-200 text-xs text-neutral-400">
+                                    <td></td>
                                     <td className="w-1/3 text-left pl-2">{convertTime(lapTime.lap_time_sector_1)}</td>
                                     <td className="w-1/3 text-center">{convertTime(lapTime.lap_time_sector_2)}</td>
                                     <td className="w-1/3 text-right pr-2">{convertTime(lapTime.lap_time_sector_3)}</td>

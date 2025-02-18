@@ -1,9 +1,10 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
 
-const SidebarItem = ({ icon: Icon, to, children }) => {
+const SidebarItem = ({ icon: Icon, onClick, to, children }) => {
     return (
         <NavLink
+            onClick={onClick}
             to={to}
             className={({ isActive }) =>
                 `flex items-center space-x-3 px-4 py-2 text-sm ${

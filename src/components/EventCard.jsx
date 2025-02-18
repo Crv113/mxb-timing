@@ -1,10 +1,11 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {DateTime} from "luxon";
-import {FaFlagCheckered, FaMapMarkerAlt} from "react-icons/fa";
+import {FaFlag, FaFlagCheckered, FaMapMarkerAlt} from "react-icons/fa";
 import {GrStatusGoodSmall} from "react-icons/gr";
 
 const EventCard = ({ event, status = 'current'}) => {
+    const startingDate = DateTime.fromFormat(event.starting_date, 'yyyy-MM-dd HH:mm:ss');
     const endingDate = DateTime.fromFormat(event.ending_date, 'yyyy-MM-dd HH:mm:ss');
     
     let to;
@@ -34,22 +35,31 @@ const EventCard = ({ event, status = 'current'}) => {
     }
 
     return (
-        <Link to={to}>
-            <li className={`${opacity} bg-neutral-100 rounded-lg shadow w-80 p-6 border relative cursor-default
+        <Link to={to} state={{event}}>
+            <li className={`${opacity} bg-neutral-100 rounded-lg shadow w-96 p-2 border relative cursor-default flex
              ${disabled ? '' : 'hover:border-neutral-400 transition-colors hover:cursor-pointer hover:shadow-lg transition-shadow duration-300'}`
             }>
-                <div className="flex items-center gap-2">
-                    <GrStatusGoodSmall className={statusColor} />
-                    <h2 className="font-outfitRegular text-xl">{event.name}</h2>
-                </div>
-                <div className="flex items-center pt-1 gap-2">
-                    <FaMapMarkerAlt/>
-                    <h3 className="font-outfitLight text-sm">{event.track.name}</h3>
-                </div>
-                <div className="flex flex-row pt-2 gap-2">
-                    <div className="flex items-center gap-2">
-                        <FaFlagCheckered />
-                        <span className="text-xs">{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
+                <img src={event.image ?? event.track.image} alt="event image" className="w-32 h-32 object-cover mr-2 rounded" />
+                <div>
+                    <div className="flex gap-2">
+                        <GrStatusGoodSmall className={`mt-1 ${statusColor}`} />
+                        <h2 className="font-outfitRegular">{event.name}</h2>
+                    </div>
+                    <div className="flex pt-1 gap-2">
+                        <FaMapMarkerAlt className="mt-0.5"/>
+                        <h3 className="font-outfitLight text-sm mt">{event.track.name}</h3>
+                    </div>
+                    <div className="flex flex-row pt-2 gap-2">
+                        <div className="flex items-center gap-2">
+                            <FaFlag className="text-green-600" />
+                            <span className="text-xs">{startingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
+                        </div>
+                    </div>
+                    <div className="flex flex-row pt-2 gap-2">
+                        <div className="flex items-center gap-2">
+                            <FaFlagCheckered />
+                            <span className="text-xs">{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
+                        </div>
                     </div>
                 </div>
             </li>

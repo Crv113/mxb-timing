@@ -8,11 +8,14 @@ import {IoCheckmark, IoClose} from "react-icons/io5";
 import {AiOutlinePlus} from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import {DateTime} from "luxon";
+import {useAuth} from "../context/AuthContext";
+import {getXsrfHeader} from "../utils/xsrfUtils";
 
 const Events = () => {
-    // État pour stocker les données des événements
+    const { user, authToken } = useAuth();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [formErrors, setFormErrors] = useState({});
 
     const [finishedEvents, setFinishedEvents] = useState([]);
     const [currentEvents, setCurrentEvents] = useState([]);
@@ -30,23 +33,20 @@ const Events = () => {
         track_id: '',
     });
     
-    // Appel API pour récupérer les événements
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events`, {
+                const {data: eventsData} = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events`, {
                     headers: {
                         Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}`
                     }
                 });
 
-                const eventsData = response.data;
                 const now = new Date();
                 setFinishedEvents(eventsData.filter(event => new Date(event.ending_date) < now));
                 setCurrentEvents(eventsData.filter(event => new Date(event.starting_date) <= now && new Date(event.ending_date) >= now));
                 setUpcomingEvents(eventsData.filter(event => new Date(event.starting_date) > now));
 
-                // setEvents(response.data);
             } catch (err) {
                 setError('Failed to fetch events');
             } finally {
@@ -54,23 +54,15 @@ const Events = () => {
             }
         };
 
-        fetchEvents();
-
         const fetchTracks = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks`, {
+                const {data: fetchedTracks} = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks`, {
                     headers: {
                         Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}`
                     }
                 });
 
-                
-                const fetchedTracks = response.data;
                 setTracks(fetchedTracks);
-                if (fetchedTracks.length > 0) {
-                    setFormData({...formData, track_id: fetchedTracks[0].id})
-                }
-                
             } catch (err) {
                 setError('Failed to fetch tracks');
             } finally {
@@ -78,29 +70,73 @@ const Events = () => {
             }
         };
 
-        fetchTracks();
+        (async () => {
+            await fetchEvents();
+            await fetchTracks();
+        })();
         
     }, []);
 
+    const validateForm = () => {
+        const errors = {};
+        
+        if (!formData.name.trim()) {
+            errors.name = "Name is required.";
+        }
+
+        if (!formData.track_id) {
+            errors.track_id = "You must select a track.";
+        }
+        
+        if(!startingDate) {
+            errors.starting_date = "Starting date is required";
+        }
+        
+        if(!endingDate) {
+            errors.ending_date = "Ending date is required";
+        }
+        
+        if (formData.image.size > process.env.REACT_APP_MAX_FILE_SIZE) {
+            const maxFileSizeInMB = (process.env.REACT_APP_MAX_FILE_SIZE / (1024 * 1024)).toFixed(2);
+            errors.image = `Max file size allowed: ${maxFileSizeInMB} Mo`;
+        }
+        
+        console.log(errors)
+        console.log(formData.image.size)
+        console.log(process.env.REACT_APP_MAX_FILE_SIZE)
+        console.log(process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN)
+        
+        setFormErrors(errors);
+
+        // Retourne true si aucune erreur, sinon false
+        return Object.keys(errors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if(!validateForm()) {
+            return;
+        }
 
-        const postData = {
-            name: formData.name,
-            track_id: formData.track_id,
-            starting_date: DateTime.fromJSDate(startingDate).toFormat("yyyy-MM-dd HH:mm:ss"),
-            ending_date: DateTime.fromJSDate(endingDate).toFormat("yyyy-MM-dd HH:mm:ss"),
-        };
-
+        const postData = new FormData();
+        postData.append('name', formData.name);
+        postData.append('track_id', formData.track_id);
+        postData.append('starting_date', DateTime.fromJSDate(startingDate).toFormat("yyyy-MM-dd HH:mm:ss"));
+        postData.append('ending_date', DateTime.fromJSDate(endingDate).toFormat("yyyy-MM-dd HH:mm:ss"));
+        
+        if(formData.image) {
+            postData.append('image', formData.image);
+        }
+        
         try {
-            const response = await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events`, postData, {
+            const {data: createdEvent} = await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events`, postData, {
+                withCredentials: true,
                 headers: {
-                    Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}`
+                    Authorization: `Bearer ${authToken}`,
+                    ...getXsrfHeader()
                 }
             });
-            console.log("Event created:", response.data);
-
-            const createdEvent = response.data;
 
             const now = new Date();
             if (new Date(createdEvent.starting_date) > now) {
@@ -115,7 +151,8 @@ const Events = () => {
             }
 
             setIsModalOpen(false);
-            setFormData({ name: '', track: '' });
+            setFormData({ name: '', track_id: '' });
+            setFormErrors({});
             setStartDate(DateTime.now().startOf("hour").toJSDate());
             setEndDate(null);
         } catch (err) {
@@ -129,14 +166,16 @@ const Events = () => {
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return <span>{error}</span>;
     }
 
     return (
         <div className="events-content">
-            <Button icon={AiOutlinePlus} color="primary" onClick={() => setIsModalOpen(true)}>Event</Button>
+
+            {user && <Button icon={AiOutlinePlus} color="primary" onClick={() => setIsModalOpen(true)}>Event</Button>}
             
-            <section className="pb-5 pt-7">
+            
+            <section className="pb-5">
                 <h1 className="text-2xl font-outfitMedium text-neutral-950 pb-5">Current Events</h1>
                 <ul className="flex gap-6 flex-wrap">
                     {currentEvents.map(event => (
@@ -183,19 +222,43 @@ const Events = () => {
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     className="w-72 px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-neutral-950 text-sm"
                                 />
+                                {formErrors.name && (
+                                    <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
+                                )}
                             </div>
                             <div className="w-1/2">
+                                <label className="block text-neutral-700 text-sm text-nowrap">Image</label>
+                                <input
+                                    type="file"
+                                    onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                                    className="mt-1 w-72 px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-neutral-950 text-sm"
+                                />
+                                {formErrors.image && (
+                                    <p className="text-red-500 text-xs mt-1">{formErrors.image}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className="mb-4 flex gap-6">
+                            <div className="w-full">
                                 <label htmlFor="tracks" className="block text-neutral-700 text-sm">Track</label>
                                 <select
                                     id="tracks"
-                                    value={formData.track_id}
-                                    onChange={(e) => setFormData({...formData, track_id: e.target.value})}
+                                    value={ formData.track_id || ""}
+                                    onChange={(e) => {
+                                        setFormData({...formData, track_id: e.target.value});
+                                    }}
                                     className="w-72 px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-neutral-950 text-sm"
                                 >
+                                    <option value="" disabled>
+                                        Select a track
+                                    </option>
                                     {tracks.map(track => (
                                         <option key={track.id} value={track.id}>{track.name}</option>
                                     ))}
                                 </select>
+                                {formErrors.track_id && (
+                                    <p className="text-red-500 text-xs mt-1">{formErrors.track_id}</p>
+                                )}
                             </div>
                         </div>
                         <div className="mb-4 flex gap-6">
@@ -212,6 +275,9 @@ const Events = () => {
                                     maxDate={endingDate}
                                     className="w-72 px-3 py-2 border rounded-lg focus:outline-none focus:border-neutral-950 text-sm"
                                 />
+                                {formErrors.starting_date && (
+                                    <p className="text-red-500 text-xs mt-1">{formErrors.starting_date}</p>
+                                )}
                             </div>
 
                             <div>
@@ -226,6 +292,9 @@ const Events = () => {
                                     minDate={startingDate}
                                     className="w-72 px-3 py-2 border rounded-lg focus:outline-none focus:border-neutral-950 text-sm"
                                 />
+                                {formErrors.ending_date && (
+                                    <p className="text-red-500 text-xs mt-1">{formErrors.ending_date}</p>
+                                )}
                             </div>
                         </div>
                         <div className="flex justify-end gap-4">
