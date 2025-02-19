@@ -9,19 +9,28 @@ export const AuthProvider = ({ children }) => {
     const [isUserLoading, setIsUserLoading] = useState(true); 
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
+    const updateUser = (newUserData) => {
+        setUser((prevUser) => ({ ...prevUser, ...newUserData }));
+    };
+    
     const fetchTokenFromBackend = async () => {
         
         try {
+            const params = new URLSearchParams(window.location.search);
+            const urlToken = params.get("token");
 
-            const csrfCookieExists = document.cookie.includes("XSRF-TOKEN");
-            
-            if(!csrfCookieExists) {
-                await fetch(`${process.env.REACT_APP_SEEK_AND_STOCK_URL}/sanctum/csrf-cookie`, {
-                    method: "GET",
-                    credentials: "include",
-                });
-            } 
-            
+            if (urlToken) {
+                localStorage.setItem("authToken", urlToken);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return urlToken;
+            }
+
+            let storedToken = localStorage.getItem("authToken");
+            if (storedToken) {
+                return storedToken;
+            }
+
+
             const response = await fetch(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/get-token`, {
                 method: "GET",
                 credentials: "include",
@@ -43,26 +52,25 @@ export const AuthProvider = ({ children }) => {
     
     const fetchUser = async () => {
         setIsUserLoading(true);
-        let token = authToken;
+        let token = authToken || localStorage.getItem("authToken");
+
+        if (!token) {
+            setIsUserLoading(false);
+            return;
+        }
+        
         try {
-            if(!authToken) {
-                token = await fetchTokenFromBackend();
-                setAuthToken(token);
+            const userResponse = await fetch(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!userResponse.ok) {
+                console.error("Erreur de récupération utilisateur");
+                return null;
             }
 
-            if (token) {
-                const userResponse = await fetch(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                if (!userResponse.ok) {
-                    console.error("Erreur de récupération utilisateur");
-                    return null;
-                }
-
-                const userData = await userResponse.json();
-                setUser(userData);
-            }
+            const userData = await userResponse.json();
+            setUser(userData);
         } catch (error) {
             console.error(error);
             await logout(); 
@@ -98,12 +106,16 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            await fetchUser();
+            const token = await fetchTokenFromBackend();
+            if (token) {
+                setAuthToken(token);
+                await fetchUser();
+            }
         })();
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, logout, isUserLoading, authToken }}>
+        <AuthContext.Provider value={{ user, updateUser, logout, isUserLoading, authToken }}>
             {children}
         </AuthContext.Provider>
     );

@@ -96,16 +96,11 @@ const Events = () => {
             errors.ending_date = "Ending date is required";
         }
         
-        if (formData.image.size > process.env.REACT_APP_MAX_FILE_SIZE) {
+        if (formData.image && formData.image.size > process.env.REACT_APP_MAX_FILE_SIZE) {
             const maxFileSizeInMB = (process.env.REACT_APP_MAX_FILE_SIZE / (1024 * 1024)).toFixed(2);
             errors.image = `Max file size allowed: ${maxFileSizeInMB} Mo`;
         }
-        
-        console.log(errors)
-        console.log(formData.image.size)
-        console.log(process.env.REACT_APP_MAX_FILE_SIZE)
-        console.log(process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN)
-        
+
         setFormErrors(errors);
 
         // Retourne true si aucune erreur, sinon false
@@ -213,7 +208,7 @@ const Events = () => {
                     title="Create Event"
                 >
                     <form onSubmit={handleSubmit}>
-                        <div className="mb-4 flex gap-6">
+                        <div className="mb-4 md:flex gap-6">
                             <div className="w-1/2">
                                 <label className="block text-neutral-700 text-sm">Name</label>
                                 <input
@@ -238,7 +233,7 @@ const Events = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="mb-4 flex gap-6">
+                        <div className="mb-4 gap-6">
                             <div className="w-full">
                                 <label htmlFor="tracks" className="block text-neutral-700 text-sm">Track</label>
                                 <select
@@ -261,7 +256,7 @@ const Events = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="mb-4 flex gap-6">
+                        <div className="mb-4 md:flex gap-6">
                             <div>
                                 <label className="block text-neutral-950 mb-2 text-sm">Starting date</label>
                                 <DatePicker

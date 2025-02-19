@@ -5,7 +5,7 @@ import {getXsrfHeader} from "../utils/xsrfUtils";
 
 const Profile = () => {
     
-    const { user, isUserLoading, authToken} = useAuth();
+    const { user, isUserLoading, authToken, updateUser } = useAuth();
     const [ guid, setGuid ] = useState('');
 
     useEffect(() => {
@@ -23,7 +23,10 @@ const Profile = () => {
     }
 
     const handleBlur = async () => {
-        if(guid.trim() === '' || guid === user.guid) return;
+        if(guid.trim() === '' || guid === user.guid) {
+            setGuid(user.guid);
+            return;
+        }
 
         try {
             await axios.put(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {guid}, {
@@ -34,7 +37,7 @@ const Profile = () => {
                 },
             });
             
-            user.guid = guid;
+            updateUser({guid});
         } catch (e) {
             console.log(e)
         }
@@ -56,7 +59,7 @@ const Profile = () => {
                         onBlur={handleBlur}
                         type="text"
                         id="guid"
-                        className={`p-1 w-44 border border-gray-200 text-xs focus:outline-none ${guid ? 'bg-none' : 'bg-red-100'}`}
+                        className={`p-1 w-44 border border-gray-200 text-xxs md:w-64 focus:outline-none ${guid ? 'bg-none' : 'bg-red-100'}`}
                         placeholder={guid ? '' : 'Merci de renseigner votre GUID'}
                         value={guid}
                     />

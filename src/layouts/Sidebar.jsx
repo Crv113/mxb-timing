@@ -4,7 +4,7 @@ import {IoClose, IoHomeOutline, IoMenu} from "react-icons/io5";
 import {VscSymbolEvent} from "react-icons/vsc";
 import {FaDiscord, FaMapMarkerAlt} from "react-icons/fa";
 import {useAuth} from "../context/AuthContext";
-import {IoMdExit} from "react-icons/io";
+import {IoIosWarning, IoMdExit} from "react-icons/io";
 import {NavLink} from "react-router-dom";
 
 const Sidebar = () => {
@@ -12,7 +12,8 @@ const Sidebar = () => {
     const { user, logout } = useAuth();
 
     const handleLogin = () => {
-        window.location.href = "http://127.0.0.1:80/login/discord";
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.location.href = `http://127.0.0.1:80/login/discord?redirect=${currentUrl}`;
     };
 
     return (
@@ -32,9 +33,9 @@ const Sidebar = () => {
             )}
 
             <div
-                className={`fixed top-0 left-0 h-full bg-slate-50 text-slate-700 flex flex-col p-5 z-10 transition-transform duration-300 ${
+                className={`fixed top-0 left-0 h-screen bg-slate-50 text-slate-700 flex flex-col p-5 z-10 overflow-y-auto transition-transform duration-300 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
-                } xl:translate-x-0 xl:static w-64`}    
+                } xl:translate-x-0 w-64`}    
             >
                 <img alt={'Logo mxb timing'} className="w-40 mx-auto" src={'/mxbt.png'}/>
                 {/*<div className="text-2xl font-bold mb-5">MXB-Timing.com</div>*/}
@@ -45,7 +46,7 @@ const Sidebar = () => {
                     <SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/test">Test</SidebarItem>
                 </ul>
                 {user ? 
-                    <div className={'flex items-center justify-between px-4 py-2 text-sm bg-gray-200 rounded-xl'}>
+                    <div className={`flex items-center justify-between px-4 py-2 text-sm bg-gray-200 rounded-xl ${!user.guid && 'animate-pulse bg-red-300'}`}>
                         <NavLink to="/profile" onClick={() => setIsOpen(false)}>
                             <div className={'flex items-center space-x-3'}>
                                 <img
@@ -54,6 +55,7 @@ const Sidebar = () => {
                                     className={'w-8 rounded-full'}
                                 />
                                 <span className={'font-semibold'}>{user.discord_global_name}</span>
+                                {!user.guid && <IoIosWarning className="text-red-600 text-xl" />}
                             </div>
                         </NavLink>
                         <IoMdExit onClick={logout} className="text-xl hover:cursor-pointer" />

@@ -18,7 +18,7 @@ function App() {
           <BrowserRouter>
               <div className="flex h-screen font-sans">
                   <Sidebar />
-                  <div className="flex-1 p-5 bg-white mt-10 xl:mt-0">
+                  <div className="flex-1 p-5 bg-white mt-10 xl:mt-0 xl:ml-64">
                       <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/test" element={<Test />} />

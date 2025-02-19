@@ -60,8 +60,13 @@ const Tracks = () => {
 
         if (!formData.image) {
             errors.image = "Image is required.";
+        } else {
+            if (formData.image.size > process.env.REACT_APP_MAX_FILE_SIZE) {
+                const maxFileSizeInMB = (process.env.REACT_APP_MAX_FILE_SIZE / (1024 * 1024)).toFixed(2);
+                errors.image = `Max file size allowed: ${maxFileSizeInMB} Mo`;
+            }
         }
-
+        
         setFormErrors(errors);
 
         // Retourne true si aucune erreur, sinon false
@@ -218,7 +223,7 @@ const Tracks = () => {
                                 className="mt-1 w-72 px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-neutral-950 text-sm"
                             />
                             {formErrors.image && (
-                                <p className="text-red-500 text-xs mt-1">{formErrors.image}</p>
+                                <p className="text-red-500 text-xs mt-1 text-nowrap">{formErrors.image}</p>
                             )}
                         </div>
                     </div>
