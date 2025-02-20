@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useAuth} from "../context/AuthContext";
 import axios from "axios";
-import {getXsrfHeader} from "../utils/xsrfUtils";
 
 const Profile = () => {
     
@@ -33,7 +32,6 @@ const Profile = () => {
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${authToken}`,
-                    ...getXsrfHeader(),
                 },
             });
             

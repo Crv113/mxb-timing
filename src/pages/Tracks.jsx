@@ -7,7 +7,6 @@ import {IoCheckmark, IoClose} from "react-icons/io5";
 import {AiOutlinePlus} from "react-icons/ai";
 import TrackCard from "../components/TrackCard";
 import {useAuth} from "../context/AuthContext";
-import {getXsrfHeader} from "../utils/xsrfUtils";
 
 const Tracks = () => {
     const {user} = useAuth();
@@ -87,12 +86,13 @@ const Tracks = () => {
             postData.append('image', formData.image);
         }
         
+        console.log('authToken Create track')
+        console.log(authToken)
         try {
             const {data: createdTrack} = await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks`, postData, {
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${authToken}`,
-                    ...getXsrfHeader(),
                 },
             });
 
@@ -119,6 +119,8 @@ const Tracks = () => {
         }
 
         try {
+            console.log('authToken Edit track')
+            console.log(authToken)
             const {data: updatedTrack} = await axios.post(
                 `${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks/${selectedTrack.id}`,
                 updatedData,
@@ -126,7 +128,6 @@ const Tracks = () => {
                     withCredentials: true,
                     headers: {
                         Authorization: `Bearer ${authToken}`,
-                        ...getXsrfHeader()
                     }
                 }
             );

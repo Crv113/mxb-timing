@@ -9,7 +9,6 @@ import {AiOutlinePlus} from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import {DateTime} from "luxon";
 import {useAuth} from "../context/AuthContext";
-import {getXsrfHeader} from "../utils/xsrfUtils";
 
 const Events = () => {
     const { user, authToken } = useAuth();
@@ -125,11 +124,12 @@ const Events = () => {
         }
         
         try {
+            console.log('authToken Create event')
+            console.log(authToken)
             const {data: createdEvent} = await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events`, postData, {
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${authToken}`,
-                    ...getXsrfHeader()
                 }
             });
 

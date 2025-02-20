@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import {getXsrfHeader} from "../utils/xsrfUtils";
 
 const AuthContext = createContext(null);
 
@@ -13,40 +12,22 @@ export const AuthProvider = ({ children }) => {
         setUser((prevUser) => ({ ...prevUser, ...newUserData }));
     };
     
-    const fetchTokenFromBackend = async () => {
+    const fetchToken = async () => {
         
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const urlToken = params.get("token");
+        const params = new URLSearchParams(window.location.search);
+        const urlToken = params.get("token");
 
-            if (urlToken) {
-                localStorage.setItem("authToken", urlToken);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return urlToken;
-            }
-
-            let storedToken = localStorage.getItem("authToken");
-            if (storedToken) {
-                return storedToken;
-            }
-
-
-            const response = await fetch(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/get-token`, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}`,
-                }
-            });
-
-            const data = await response.json();
-            if (data.token) {
-                localStorage.setItem("authToken", data.token);
-                return data.token;
-            }
-        } catch (error) {
-            console.error("Erreur lors de la récupération du token:", error);
+        if (urlToken) {
+            localStorage.setItem("authToken", urlToken);
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return urlToken;
         }
+
+        let storedToken = localStorage.getItem("authToken");
+        if (storedToken) {
+            return storedToken;
+        }
+
         return null;
     };
     
@@ -87,7 +68,6 @@ export const AuthProvider = ({ children }) => {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                     Authorization: `Bearer ${authToken}`,
-                    ...getXsrfHeader(),
                 },
             });
         } catch (error) {
@@ -106,7 +86,9 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            const token = await fetchTokenFromBackend();
+            const token = await fetchToken();
+            console.log('token')
+            console.log(token)
             if (token) {
                 setAuthToken(token);
                 await fetchUser();
