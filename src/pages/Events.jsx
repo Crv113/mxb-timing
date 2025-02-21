@@ -11,7 +11,7 @@ import {DateTime} from "luxon";
 import {useAuth} from "../context/AuthContext";
 
 const Events = () => {
-    const { user, authToken } = useAuth();
+    const { isAdmin, authToken } = useAuth();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [formErrors, setFormErrors] = useState({});
@@ -167,7 +167,7 @@ const Events = () => {
     return (
         <div className="events-content">
 
-            {user && <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsModalOpen(true)}>Event</Button>}
+            {isAdmin && <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsModalOpen(true)}>Event</Button>}
             
             
             <section className="pb-5">

@@ -9,7 +9,6 @@ import TrackCard from "../components/TrackCard";
 import {useAuth} from "../context/AuthContext";
 
 const Tracks = () => {
-    const {user} = useAuth();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [formErrors, setFormErrors] = useState({});
@@ -86,8 +85,6 @@ const Tracks = () => {
             postData.append('image', formData.image);
         }
         
-        console.log('authToken Create track')
-        console.log(authToken)
         try {
             const {data: createdTrack} = await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks`, postData, {
                 withCredentials: true,
@@ -119,8 +116,6 @@ const Tracks = () => {
         }
 
         try {
-            console.log('authToken Edit track')
-            console.log(authToken)
             const {data: updatedTrack} = await axios.post(
                 `${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks/${selectedTrack.id}`,
                 updatedData,
@@ -184,7 +179,7 @@ const Tracks = () => {
             
             <section className="pb-5">
                 
-                {user && <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsCreateModalOpen(true)}>Track</Button>}
+                <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsCreateModalOpen(true)}>Track</Button>
                 
                 <h1 className="text-2xl font-outfitMedium text-neutral-950 pb-5">Tracks</h1>
                 <ul className="flex gap-6 flex-wrap justify-center md:justify-normal">

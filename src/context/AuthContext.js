@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [roles, setRoles] = useState([]);
     const [isUserLoading, setIsUserLoading] = useState(true); 
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
@@ -41,17 +42,12 @@ export const AuthProvider = ({ children }) => {
         }
         
         try {
-            const userResponse = await fetch(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {
+            const {data: fetchedUser} = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (!userResponse.ok) {
-                console.error("Erreur de récupération utilisateur");
-                return null;
-            }
-
-            const userData = await userResponse.json();
-            setUser(userData);
+            setUser(fetchedUser);
+            setRoles(fetchedUser.roles)
         } catch (error) {
             console.error(error);
             await logout(); 
@@ -87,17 +83,17 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         (async () => {
             const token = await fetchToken();
-            console.log('token')
-            console.log(token)
             if (token) {
                 setAuthToken(token);
                 await fetchUser();
             }
+
         })();
     }, []);
+    const isAdmin = roles.includes("admin");
 
     return (
-        <AuthContext.Provider value={{ user, updateUser, logout, isUserLoading, authToken }}>
+        <AuthContext.Provider value={{ user, updateUser, logout, isUserLoading, authToken, isAdmin, roles }}>
             {children}
         </AuthContext.Provider>
     );

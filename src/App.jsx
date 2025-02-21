@@ -9,6 +9,7 @@ import {Settings} from "luxon";
 import Tracks from "./pages/Tracks";
 import Profile from "./pages/Profile";
 import {AuthProvider} from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
     Settings.defaultLocale = 'en';
@@ -21,7 +22,9 @@ function App() {
                       <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/events" element={<Events />} />
-                          <Route path="/tracks" element={<Tracks />} />
+                          <Route path="/tracks" element={<PrivateRoute role="admin">
+                              <Tracks />
+                          </PrivateRoute> } />
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="*" element={<h1>404 - Page Not Found</h1>} />

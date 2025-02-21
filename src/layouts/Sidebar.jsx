@@ -10,7 +10,7 @@ import {SlLocationPin} from "react-icons/sl";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { user, logout } = useAuth();
+    const { user, logout, isAdmin } = useAuth();
 
     const handleLogin = () => {
         const currentUrl = encodeURIComponent(window.location.href);
@@ -43,7 +43,7 @@ const Sidebar = () => {
                 <ul className="list-none p-0 flex-grow">
                     <SidebarItem icon={IoHomeOutline} onClick={() => setIsOpen(false)} to="/">Home</SidebarItem>
                     <SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/events">Events</SidebarItem>
-                    <SidebarItem icon={SlLocationPin} onClick={() => setIsOpen(false)} to="/tracks">Tracks</SidebarItem>
+                    {isAdmin && <SidebarItem icon={SlLocationPin} onClick={() => setIsOpen(false)} to="/tracks">Tracks</SidebarItem>}
                     {/*<SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/test">Test</SidebarItem>*/}
                 </ul>
                 {user ? 
