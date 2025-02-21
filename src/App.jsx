@@ -6,7 +6,6 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Events from "./pages/Events";
 import Event from "./pages/Event";
 import {Settings} from "luxon";
-import Test from "./pages/Test";
 import Tracks from "./pages/Tracks";
 import Profile from "./pages/Profile";
 import {AuthProvider} from "./context/AuthContext";
@@ -21,7 +20,6 @@ function App() {
                   <div className="flex-1 p-5 bg-white mt-10 xl:mt-0 xl:ml-64">
                       <Routes>
                           <Route path="/" element={<Home />} />
-                          <Route path="/test" element={<Test />} />
                           <Route path="/events" element={<Events />} />
                           <Route path="/tracks" element={<Tracks />} />
                           <Route path="/profile" element={<Profile />} />

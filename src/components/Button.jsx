@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ onClick, icon: Icon, children, color }) => {
+const Button = ({ onClick, icon: Icon, children, color, className }) => {
     
     let bgColor;
     let bgColorHover;
@@ -34,7 +34,7 @@ const Button = ({ onClick, icon: Icon, children, color }) => {
     return (
         <button
             onClick={onClick}
-            className={`${bgColor} ${bgColorHover} ${textColor} float-end font-bold py-1 px-2 rounded inline-flex items-center`}
+            className={`${className} ${bgColor} ${bgColorHover} ${textColor} font-bold py-1 px-2 rounded inline-flex items-center`}
         >
             {Icon && <Icon className="fill-current w-4 h-4 mr-2"/>}
             <span className="text-sm">{children}</span>

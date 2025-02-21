@@ -1,5 +1,4 @@
 import React from 'react';
-import {FaMapMarkerAlt} from "react-icons/fa";
 import {truncateString} from "../utils/stringUtils";
 
 const TrackCard = ({ track, onClick }) => {

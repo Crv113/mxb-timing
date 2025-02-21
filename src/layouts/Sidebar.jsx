@@ -1,11 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import SidebarItem from "../components/SidebarItem";
 import {IoClose, IoHomeOutline, IoMenu} from "react-icons/io5";
 import {VscSymbolEvent} from "react-icons/vsc";
-import {FaDiscord, FaMapMarkerAlt} from "react-icons/fa";
+import {FaDiscord} from "react-icons/fa";
 import {useAuth} from "../context/AuthContext";
 import {IoIosWarning, IoMdExit} from "react-icons/io";
 import {NavLink} from "react-router-dom";
+import {SlLocationPin} from "react-icons/sl";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -42,8 +43,8 @@ const Sidebar = () => {
                 <ul className="list-none p-0 flex-grow">
                     <SidebarItem icon={IoHomeOutline} onClick={() => setIsOpen(false)} to="/">Home</SidebarItem>
                     <SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/events">Events</SidebarItem>
-                    <SidebarItem icon={FaMapMarkerAlt} onClick={() => setIsOpen(false)} to="/tracks">Tracks</SidebarItem>
-                    <SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/test">Test</SidebarItem>
+                    <SidebarItem icon={SlLocationPin} onClick={() => setIsOpen(false)} to="/tracks">Tracks</SidebarItem>
+                    {/*<SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/test">Test</SidebarItem>*/}
                 </ul>
                 {user ? 
                     <div className={`flex items-center justify-between px-4 py-2 text-sm bg-gray-200 rounded-xl ${!user.guid && 'animate-pulse bg-red-300'}`}>

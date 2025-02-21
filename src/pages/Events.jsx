@@ -167,7 +167,7 @@ const Events = () => {
     return (
         <div className="events-content">
 
-            {user && <Button icon={AiOutlinePlus} color="primary" onClick={() => setIsModalOpen(true)}>Event</Button>}
+            {user && <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsModalOpen(true)}>Event</Button>}
             
             
             <section className="pb-5">

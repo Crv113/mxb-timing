@@ -184,7 +184,7 @@ const Tracks = () => {
             
             <section className="pb-5">
                 
-                {user && <Button icon={AiOutlinePlus} color="primary" onClick={() => setIsCreateModalOpen(true)}>Track</Button>}
+                {user && <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsCreateModalOpen(true)}>Track</Button>}
                 
                 <h1 className="text-2xl font-outfitMedium text-neutral-950 pb-5">Tracks</h1>
                 <ul className="flex gap-6 flex-wrap justify-center md:justify-normal">

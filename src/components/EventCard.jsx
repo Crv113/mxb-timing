@@ -1,8 +1,9 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {DateTime} from "luxon";
-import {FaFlag, FaFlagCheckered, FaMapMarkerAlt} from "react-icons/fa";
+import {FaFlagCheckered, FaRegFlag} from "react-icons/fa";
 import {GrStatusGoodSmall} from "react-icons/gr";
+import {SlLocationPin} from "react-icons/sl";
 
 const EventCard = ({ event, status = 'current'}) => {
     const startingDate = DateTime.fromFormat(event.starting_date, 'yyyy-MM-dd HH:mm:ss');
@@ -37,7 +38,7 @@ const EventCard = ({ event, status = 'current'}) => {
     return (
         <Link to={to} state={{event}}>
             <li className={`${opacity} bg-neutral-100 rounded-lg shadow w-96 p-2 border relative cursor-default flex
-             ${disabled ? '' : 'hover:border-neutral-400 transition-colors hover:cursor-pointer hover:shadow-lg transition-shadow duration-300'}`
+             ${disabled ? '' : 'hover:border-neutral-400 hover:cursor-pointer hover:shadow-lg duration-300'}`
             }>
                 <img src={event.image ?? event.track.image} alt="event image" className="w-32 h-32 object-cover mr-2 rounded" />
                 <div>
@@ -46,12 +47,12 @@ const EventCard = ({ event, status = 'current'}) => {
                         <h2 className="font-outfitRegular">{event.name}</h2>
                     </div>
                     <div className="flex pt-1 gap-2">
-                        <FaMapMarkerAlt className="mt-0.5"/>
+                        <SlLocationPin className="mt-0.5"/>
                         <h3 className="font-outfitLight text-sm mt">{event.track.name}</h3>
                     </div>
                     <div className="flex flex-row pt-2 gap-2">
                         <div className="flex items-center gap-2">
-                            <FaFlag className="text-green-600" />
+                            <FaRegFlag className="text-green-600" />
                             <span className="text-xs">{startingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
                         </div>
                     </div>
