@@ -10,3 +10,11 @@ stop-l:
 vstop-l:
 	docker-compose -f docker-compose-local.yml down -v
 
+start-p:
+	docker-compose up --build
+
+dstart-p:
+	docker-compose up --build -d
+
+stop-p:
+	docker-compose down
