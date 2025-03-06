@@ -1,5 +1,6 @@
 import './tailwind.css'; 
-import './App.css'; 
+import './App.css';
+
 import Sidebar from "./layouts/Sidebar";
 import Home from "./pages/Home";
 import {BrowserRouter, Route, Routes} from "react-router-dom";

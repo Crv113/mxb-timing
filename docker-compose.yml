@@ -1,9 +1,0 @@
-version: '3.8'
-
-services:
-  frontend:
-    build: .
-    container_name: mxbtiming_front
-    restart: always
-    ports:
-      - "80:80"

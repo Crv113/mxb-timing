@@ -14,7 +14,8 @@ const Sidebar = () => {
 
     const handleLogin = () => {
         const currentUrl = encodeURIComponent(window.location.href);
-        window.location.href = `http://127.0.0.1:80/login/discord?redirect=${currentUrl}`;
+        console.log(`${process.env.REACT_APP_LOGIN_DISCORD_URL_WITH_REDIRECT}${currentUrl}`)
+        window.location.href = `${process.env.REACT_APP_LOGIN_DISCORD_URL_WITH_REDIRECT}${currentUrl}`;
     };
 
     return (
