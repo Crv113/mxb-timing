@@ -1,31 +1,11 @@
-import React, {useEffect, useRef} from "react";
-import { IoClose } from "react-icons/io5"; 
+import { IoClose } from "react-icons/io5";
 
 const Modal = ({ isOpen, onClose, title, children }) => {
-
-    const modalRef = useRef(null);
-
-    const handleClickOutside = (event) => {
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-            onClose();
-        }
-    };
-
-    useEffect(() => {
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isOpen]);
-    
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div  ref={modalRef} className="bg-white p-6 rounded-lg shadow-lg w-fit relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={onClose}>
+            <div className="bg-white p-6 rounded-lg shadow-lg w-fit relative pointer-events-none">
                 <button
                     onClick={onClose}
                     className="absolute top-2 right-2 text-neutral-950 hover:text-neutral-600"

@@ -13,6 +13,14 @@ import {useAuth} from "../context/AuthContext";
 import {RxCross1} from "react-icons/rx";
 import {SlLocationPin} from "react-icons/sl";
 
+
+function convertTime(seconds) {
+    const minutes = Math.floor(seconds / 60); // Nombre entier de minutes
+    const remainingSeconds = (seconds % 60).toFixed(3); // Secondes restantes avec 3 décimales
+
+    return `${minutes}.${remainingSeconds}`;
+}
+
 const Event = () => {
     const { user, authToken } = useAuth();
     const { id } = useParams();
@@ -43,7 +51,7 @@ const Event = () => {
     }, [id]);
 
     useEffect(() => {
-    
+
         const fetchData = async () => {
             try {
                 const {data: fetchedEvent} = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}`, {
@@ -52,7 +60,7 @@ const Event = () => {
                     }
                 });
                 setEvent(fetchedEvent);
-                
+
                 await fetchLapTimes();
 
                 const {data: fetchedEventUsers} = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}/users`, {
@@ -80,13 +88,12 @@ const Event = () => {
             const now = DateTime.now();
             setIsCurrentEvent(now >= startingDate && now <= endingDate);
         }
-        
+
         if(user) {
             setIsSubscribe(guids.includes(user.guid))
         }
-       
-    }, [event, guids]);
 
+    }, [event, guids, user]);
 
     if (loading) {
         return <Loading>Loading ..</Loading>;
@@ -95,14 +102,7 @@ const Event = () => {
     if (error) {
         return <p>{error}</p>;
     }
-    
-    function convertTime(seconds) {
-        const minutes = Math.floor(seconds / 60); // Nombre entier de minutes
-        const remainingSeconds = (seconds % 60).toFixed(3); // Secondes restantes avec 3 décimales
 
-        return `${minutes}.${remainingSeconds}`;
-    }
-    
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
@@ -111,7 +111,7 @@ const Event = () => {
                     Authorization: `Bearer ${authToken}`
                 }
             });
-            
+
             setGuids((prevGuids) => [...new Set([...prevGuids, user.guid])]);
             await fetchLapTimes();
         } catch (e) {
@@ -134,7 +134,7 @@ const Event = () => {
             console.log(e);
         }
     }
-    
+
     return (
         <>
             <div className="flex mb-5">
@@ -151,7 +151,7 @@ const Event = () => {
                     </div>
                     {(user && isCurrentEvent && !isSubscribe ) && <Button icon={MdDownloadDone} color="secondary" onClick={handleRegister}>Register</Button>}
                     {(user && isCurrentEvent && isSubscribe ) && <Button icon={RxCross1} color="primary" onClick={handleUnsubscribe}>Unsubscribe</Button>}
-                    
+
                 </div>
             </div>
             {isLargeScreen ? <DesktopLapTimeTable lapTimes={lapTimes} convertTime={convertTime}/> :

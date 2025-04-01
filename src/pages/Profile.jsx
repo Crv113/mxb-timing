@@ -3,7 +3,7 @@ import {useAuth} from "../context/AuthContext";
 import axios from "axios";
 
 const Profile = () => {
-    
+
     const { user, isUserLoading, authToken, updateUser } = useAuth();
     const [ guid, setGuid ] = useState('');
 
@@ -11,12 +11,12 @@ const Profile = () => {
         if (user?.guid && !guid) {
             setGuid(user.guid);
         }
-    }, [user]);
-    
+    }, [user, guid]);
+
     if(!user) {
         return <h1>non connecté</h1>;
     }
-    
+
     if(isUserLoading) {
         return <h1>Chargement...</h1>;
     }
@@ -34,15 +34,15 @@ const Profile = () => {
                     Authorization: `Bearer ${authToken}`,
                 },
             });
-            
+
             updateUser({guid});
         } catch (e) {
             console.log(e)
         }
     }
-    
+
     return (
-        <div className={'flex items-center bg-slate-50 rounded-xl p-4 space-x-5'}>
+        <div className='flex items-center bg-slate-50 rounded-xl p-4 space-x-5'>
             <img
                 src={`https://cdn.discordapp.com/avatars/${user.discord_id}/${user.discord_avatar}.png`}
                 alt="Avatar"
