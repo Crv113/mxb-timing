@@ -1,44 +1,50 @@
 import React, {useEffect, useState} from 'react';
 import {useAuth} from "../context/AuthContext";
 import axios from "axios";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "react-toastify";
+
+const updateUserGuid = async ({ guid, authToken }) => {
+    await axios.put(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {guid}, {
+        withCredentials: true,
+        headers: {
+            Authorization: `Bearer ${authToken}`,
+        },
+    });
+}
 
 const Profile = () => {
 
-    const { user, isUserLoading, authToken, updateUser } = useAuth();
+    const { isUserAuthenticated, user, isUserLoading, authToken, updateUser } = useAuth();
     const [ guid, setGuid ] = useState('');
 
+    const mutation = useMutation({
+        mutationFn: updateUserGuid,
+        onSuccess: (_, variables) => {
+            updateUser({ guid: variables.guid});
+            toast.info("GUID mis à jour avec succès");
+        },
+        onError: (error) => {
+            console.error("Erreur lors de la mise à jour du GUID", error);
+        }
+    })
+    
     useEffect(() => {
         if (user?.guid && !guid) {
             setGuid(user.guid);
         }
     }, [user, guid]);
 
-    if(!user) {
-        return <h1>non connecté</h1>;
-    }
-
-    if(isUserLoading) {
-        return <h1>Chargement...</h1>;
-    }
+    if(isUserLoading) return <h1>Chargement...</h1>;
+    if(!isUserAuthenticated) return <h1>non connecté</h1>;
 
     const handleBlur = async () => {
         if(guid.trim() === '' || guid === user.guid) {
             setGuid(user.guid);
             return;
         }
-
-        try {
-            await axios.put(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {guid}, {
-                withCredentials: true,
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            });
-
-            updateUser({guid});
-        } catch (e) {
-            console.log(e)
-        }
+        
+        mutation.mutate({ guid, authToken});
     }
 
     return (
@@ -60,6 +66,7 @@ const Profile = () => {
                         className={`p-1 w-44 border border-gray-200 text-xxs md:w-64 focus:outline-none ${guid ? 'bg-none' : 'bg-red-100'}`}
                         placeholder={guid ? '' : 'Merci de renseigner votre GUID'}
                         value={guid}
+                        disabled={mutation.isPending}
                     />
                 </div>
             </div>

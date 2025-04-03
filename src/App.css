@@ -34,7 +34,9 @@
     font-family: 'outfitBlack';
     src: url('./assets/fonts/outfit/Outfit-Black.ttf') format('truetype')
 }
-
+.toast-progress-black {
+    background-color: #000 !important;
+}
 .text-xxs {
     font-size: 0.6rem;
 }

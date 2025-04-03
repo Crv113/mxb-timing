@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import {useQueryClient} from "@tanstack/react-query";
+import {toast} from "react-toastify";
 
 const AuthContext = createContext(null);
 
@@ -9,9 +11,15 @@ export const AuthProvider = ({ children }) => {
     const [isUserLoading, setIsUserLoading] = useState(true); 
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
+    const queryClient = useQueryClient();
+    
     const updateUser = (newUserData) => {
         setUser((prevUser) => ({ ...prevUser, ...newUserData }));
     };
+    
+    const cleanUrl = () => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
     
     const fetchToken = async () => {
         
@@ -20,16 +28,11 @@ export const AuthProvider = ({ children }) => {
 
         if (urlToken) {
             localStorage.setItem("authToken", urlToken);
-            window.history.replaceState({}, document.title, window.location.pathname);
+            cleanUrl();
             return urlToken;
         }
 
-        let storedToken = localStorage.getItem("authToken");
-        if (storedToken) {
-            return storedToken;
-        }
-
-        return null;
+        return localStorage.getItem("authToken"); //authToken || null
     };
     
     const fetchUser = async () => {
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }) => {
             setUser(fetchedUser);
             setRoles(fetchedUser.roles)
         } catch (error) {
-            console.error(error);
+            console.error("Failed to fetch user", error);
             await logout(); 
         } finally {
             setIsUserLoading(false);
@@ -69,7 +72,9 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 console.warn("Token expired, forcing logout...");
+                toast.warning("Session expired, logging out...");
             } else {
+                toast.error("Logout failed. Please try again.");
                 console.error("Logout error:", error);
             }
         } finally {
@@ -77,6 +82,7 @@ export const AuthProvider = ({ children }) => {
             setAuthToken(null)
             setUser(null);
             setIsUserLoading(false);
+            queryClient.clear();
         }
     };
 
@@ -90,10 +96,12 @@ export const AuthProvider = ({ children }) => {
 
         })();
     }, []);
+
+    const isUserAuthenticated = !!user;
     const isAdmin = roles.includes("admin");
 
     return (
-        <AuthContext.Provider value={{ user, updateUser, logout, isUserLoading, authToken, isAdmin, roles }}>
+        <AuthContext.Provider value={{ isUserAuthenticated, user, updateUser, logout, isUserLoading, authToken, isAdmin, roles }}>
             {children}
         </AuthContext.Provider>
     );

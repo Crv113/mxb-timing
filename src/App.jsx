@@ -11,12 +11,19 @@ import Tracks from "./pages/Tracks";
 import Profile from "./pages/Profile";
 import {AuthProvider} from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {IoMdInformationCircle} from "react-icons/io";
+import {useEffect} from "react";
 
 function App() {
     Settings.defaultLocale = 'en';
+    useEffect(() => {
+        document.title = "Mxb-Timing | Race Against Time";
+    }, []);
   return (
       <AuthProvider>
-          <BrowserRouter>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <div className="flex h-screen font-sans">
                   <Sidebar />
                   <div className="flex-1 p-5 bg-white mt-10 xl:mt-0 xl:ml-64">
@@ -30,6 +37,12 @@ function App() {
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                       </Routes>
+                      <ToastContainer
+                        autoClose={2000}
+                        newestOnTop={true}
+                        progressClassName="toast-progress-black"
+                        icon={<IoMdInformationCircle className="text-xl" />}
+                      />
                   </div>
               </div>
           </BrowserRouter>

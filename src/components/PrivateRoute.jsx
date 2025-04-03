@@ -4,13 +4,13 @@ import Loading from "./Loading";
 import React from "react";
 
 const PrivateRoute = ({ children, role }) => {
-    const { user, roles, isUserLoading } = useAuth();
+    const { isUserAuthenticated, roles, isUserLoading } = useAuth();
 
     if (isUserLoading) {
         return <Loading>Loading data</Loading>;
     }
     
-    if (!user || (role && !roles.includes(role))) {
+    if (!isUserAuthenticated || (role && !roles.includes(role))) {
         return <Navigate to="/" />;
     }
 

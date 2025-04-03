@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {truncateString} from "../utils/stringUtils";
 
 const DesktopLapTimeTable = ({lapTimes, convertTime}) => {
