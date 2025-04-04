@@ -1,6 +1,11 @@
 @import "react-datepicker/dist/react-datepicker.css";
 
 @font-face {
+    font-family: 'houseBrush';
+    src: url('./assets/fonts/HouseBrush.otf') format('truetype')
+}
+
+@font-face {
     font-family: 'outfitThin';
     src: url('./assets/fonts/outfit/Outfit-Thin.ttf') format('truetype')
 }

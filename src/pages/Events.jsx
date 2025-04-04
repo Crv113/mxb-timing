@@ -64,7 +64,7 @@ const Events = () => {
     const upcomingEvents = [...events, ...newEvents.upcoming].filter(e => new Date(e.starting_date) > now);
 
     return (
-        <div className="events-content">
+        <div>
             {isAdmin && (
                 <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsModalOpen(true)}>
                     Event

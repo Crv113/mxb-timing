@@ -13,6 +13,7 @@ module.exports = {
         outfitLight: ['outfitLight', 'sans-serif'],
         outfitBold: ['outfitBold', 'sans-serif'],
         outfitBlack: ['outfitBlack', 'sans-serif'],
+        houseBrush: ['houseBrush', 'sans-serif'],
       }
     },
   },

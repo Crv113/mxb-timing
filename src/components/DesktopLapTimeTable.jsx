@@ -4,7 +4,7 @@ import {truncateString} from "../utils/stringUtils";
 const DesktopLapTimeTable = ({lapTimes, convertTime}) => {
     
     return (
-        <div className="events-content">
+        <div>
             <div className="flex">
                 <div className="overflow-x-auto rounded-2xl border text-sm w-full">
                     <table className="w-full">

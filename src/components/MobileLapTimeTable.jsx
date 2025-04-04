@@ -4,7 +4,7 @@ import {truncateString} from "../utils/stringUtils";
 const MobileLapTimeTable = ({lapTimes, convertTime}) => {
 
     return (
-        <div className="events-content">
+        <div>
             <div className="flex mt-20">
                 <div className="overflow-x-auto sm:rounded-2xl border text-xs w-full">
                     <table className="w-full border-collapse">
