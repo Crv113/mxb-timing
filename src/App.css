@@ -34,6 +34,21 @@
     font-family: 'outfitBlack';
     src: url('./assets/fonts/outfit/Outfit-Black.ttf') format('truetype')
 }
+
+:root {
+    /* Valeur par défaut pour les linters et anciens navigateurs */
+    --vh: 1vh;
+    --app-height: 100dvh;
+}
+
+@supports not (height: 100dvh) {
+    :root {
+        --app-height: calc(var(--vh) * 100);
+    }
+}
+
+
+
 .toast-progress-black {
     background-color: #000 !important;
 }

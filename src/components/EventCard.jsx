@@ -37,9 +37,9 @@ const EventCard = ({ event, status = 'current'}) => {
 
     return (
         <Link to={to} state={{event}}>
-            <li className={`${opacity} bg-neutral-100 rounded-lg shadow w-96 p-2 border relative cursor-default flex
-             ${disabled ? '' : 'hover:border-neutral-400 hover:cursor-pointer hover:shadow-lg duration-300'}`
-            }>
+            <li className={`${opacity} w-80 lg:w-96 bg-neutral-100 rounded-lg shadow p-2 border relative cursor-default flex
+             ${disabled ? '' : 'hover:border-neutral-400 hover:cursor-pointer hover:shadow-lg duration-300'}`}
+        >
                 <img src={event.image ?? event.track.image} alt="event image" className="w-32 h-32 object-cover mr-2 rounded" />
                 <div>
                     <div className="flex gap-2">

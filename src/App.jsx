@@ -18,13 +18,23 @@ import {useEffect} from "react";
 
 function App() {
     Settings.defaultLocale = 'en';
+
     useEffect(() => {
         document.title = "Mxb-Timing | Race Against Time";
+
+        const setVh = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+        setVh();
+        window.addEventListener('resize', setVh);
+        return () => window.removeEventListener('resize', setVh);
     }, []);
+    
   return (
       <AuthProvider>
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-              <div className="flex h-screen font-sans">
+              <div className="flex font-sans" style={{ height: 'var(--app-height)' }}>
                   <Sidebar />
                   <div className="flex-1 p-5 bg-white mt-10 xl:mt-0 xl:ml-64">
                       <Routes>
