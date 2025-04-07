@@ -20,7 +20,7 @@ function App() {
     Settings.defaultLocale = 'en';
 
     useEffect(() => {
-        document.title = "Mxb-Timing | Race Against Time";
+        document.title = "MXB Timing";
 
         const setVh = () => {
             const vh = window.innerHeight * 0.01;

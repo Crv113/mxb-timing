@@ -7,7 +7,7 @@ import DesktopLapTimeTable from "../components/DesktopLapTimeTable";
 import MobileLapTimeTable from "../components/MobileLapTimeTable";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { DateTime } from "luxon";
-import { FaFlagCheckered } from "react-icons/fa";
+import {FaFlagCheckered, FaRegFlag} from "react-icons/fa";
 import Button from "../components/Button";
 import { MdDownloadDone } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
@@ -40,7 +40,7 @@ const fetchEventUsers = async (id) => {
 const Event = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
-    const { user, authToken } = useAuth();
+    const { user, isUserAuthenticated, authToken } = useAuth();
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
     const { data: event, isLoading: isEventLoading, isError: isEventError } = useQuery({
@@ -102,24 +102,28 @@ const Event = () => {
     return (
         <>
             <div className="flex mb-5">
-                <img src={event.track.image} alt="event image" className="w-44 h-44 bg-neutral-800" />
-                <div className="pl-2">
-                    <h1 className="text-3xl font-semibold">{event.name}</h1>
+                <img src={event.track.image} alt="event image" className="w-32 h-32 md:w-44 md:h-44 bg-neutral-800" />
+                <div className="pl-2 md:space-y-1">
+                    <h1 className="md:text-3xl font-semibold">{event.name}</h1>
                     <div className="flex items-center gap-2">
                         <SlLocationPin />
-                        <h2 className="text-xl">{event.track.name}</h2>
+                        <h2 className="md:text-xl">{event.track.name}</h2>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <FaRegFlag className="text-green-600" />
+                        <span className="text-sm md:text-md">{startingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <FaFlagCheckered />
-                        <span>{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
+                        <span className="text-sm md:text-md">{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
                     </div>
-                    {(user && isCurrentEvent && !isSubscribe) && (
-                        <Button icon={MdDownloadDone} color="secondary" onClick={() => registerMutation.mutate()}>
+                    {(isUserAuthenticated && isCurrentEvent && !isSubscribe) && (
+                        <Button icon={MdDownloadDone} color="secondary" className="w-fit" onClick={() => registerMutation.mutate()}>
                             Join event
                         </Button>
                     )}
-                    {(user && isCurrentEvent && isSubscribe) && (
-                        <Button icon={RxCross1} color="primary" onClick={() => unregisterMutation.mutate()}>
+                    {(isUserAuthenticated && isCurrentEvent && isSubscribe) && (
+                        <Button icon={RxCross1} color="primary" className="w-fit" onClick={() => unregisterMutation.mutate()}>
                             Leave event
                         </Button>
                     )}

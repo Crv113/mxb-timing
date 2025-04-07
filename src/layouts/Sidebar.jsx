@@ -39,7 +39,7 @@ const Sidebar = () => {
                 } xl:translate-x-0 w-64`}
                 style={{ height: 'var(--app-height)' }}
             >
-                <img alt={'Logo mxb timing'} className="w-40 mx-auto p-2" src={'/mxbt.png'}/>
+                <img alt={'Logo mxb timing'} className="w-40 mx-auto mb-5" src={'/mxbt2.png'}/>
                 <ul className="list-none p-0 flex-grow">
                     <SidebarItem icon={IoHomeOutline} onClick={() => setIsOpen(false)} to="/">Home</SidebarItem>
                     <SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/events">Events</SidebarItem>

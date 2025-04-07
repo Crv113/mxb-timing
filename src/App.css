@@ -61,9 +61,24 @@
     font-size: 0.6rem;
 }
 
+.bg-suzuki {
+    background-color: #fce903;
+    color: #938800;
+}
+
 .bg-ktm {
     background-color: rgb(253, 186, 116);
     color: rgb(154, 52, 18)
+}
+
+.bg-triumph {
+    background-color: #464646;
+    color: #ffffff;
+}
+
+.bg-kawasaki {
+    background-color: #3BD23D;
+    color: #006600;
 }
 
 .bg-yamaha {
@@ -74,6 +89,26 @@
 .bg-husqvarna, .bg-fantic  {
     background-color: rgb(212, 212, 212);
     color: rgb(38, 38, 38);
+}
+
+.bg-tm {
+    background-color: #5ac8fa;
+    color: #216ba5;
+}
+
+.bg-gasgas {
+    background-color: #bf0000;
+    color: #710000;
+}
+
+.bg-beta {
+    background-color: #ff0048;
+    color: #790023;
+}
+
+.bg-stark {
+    background-color: #ff0000;
+    color: #770404;
 }
 
 .bg-honda {
