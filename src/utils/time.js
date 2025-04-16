@@ -5,7 +5,7 @@
  */
 export function convertTime(seconds) {
     const minutes = Math.floor(seconds / 60); // Nombre entier de minutes
-    const remainingSeconds = (seconds % 60).toFixed(3); // Secondes restantes avec 3 décimales
+    const remainingSeconds = (seconds % 60).toFixed(3).padStart(6, '0'); // Secondes restantes avec 3 décimales
 
     return `${minutes}.${remainingSeconds}`;
 }
