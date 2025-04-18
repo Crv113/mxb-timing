@@ -12,7 +12,7 @@ export function convertTimeFromSecondsToFormatted(seconds) {
 
 export function convertTimeFromMillisecondsToFormatted(ms) {
     const totalSeconds = Math.floor(ms / 1000);
-    const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const minutes = Math.floor(totalSeconds / 60);
     const seconds = String(totalSeconds % 60).padStart(2, '0');
     const milliseconds = String(ms % 1000).padStart(3, '0');
 
