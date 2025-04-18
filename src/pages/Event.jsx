@@ -13,7 +13,7 @@ import { MdDownloadDone } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
 import { RxCross1 } from "react-icons/rx";
 import { SlLocationPin } from "react-icons/sl";
-import { convertTime } from "../utils/time";
+import { convertTimeFromMillisecondsToFormatted } from "../utils/time";
 import {toast} from "react-toastify";
 
 const fetchEvent = async (id) => {
@@ -130,9 +130,9 @@ const Event = () => {
                 </div>
             </div>
             {isLargeScreen ? (
-                <DesktopLapTimeTable lapTimes={lapTimes} convertTime={convertTime} />
+                <DesktopLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} />
             ) : (
-                <MobileLapTimeTable lapTimes={lapTimes} convertTime={convertTime} />
+                <MobileLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} />
             )}
         </>
     );
