@@ -1,4 +1,3 @@
-import './tailwind.css'; 
 import './App.css';
 
 import Sidebar from "./layouts/Sidebar";

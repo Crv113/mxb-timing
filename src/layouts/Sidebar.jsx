@@ -14,7 +14,7 @@ const Sidebar = () => {
 
     const handleLogin = () => {
         const currentUrl = encodeURIComponent(window.location.href);
-        window.location.href = `${process.env.REACT_APP_LOGIN_DISCORD_URL_WITH_REDIRECT}${currentUrl}`;
+        window.location.href = `${import.meta.env.VITE_LOGIN_DISCORD_URL_WITH_REDIRECT}${currentUrl}`;
     };
 
     return (

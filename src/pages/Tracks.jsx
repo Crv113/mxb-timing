@@ -9,9 +9,9 @@ import TrackForm from "../components/forms/TrackForm";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {toast} from "react-toastify";
 const fetchTracks = async () => {
-    const { data } = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks`, {
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/tracks`, {
         headers: {
-            Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}`,
+            Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}`,
         },
     });
     return data;

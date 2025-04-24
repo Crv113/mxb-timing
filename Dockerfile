@@ -9,4 +9,4 @@ RUN npm run build
 # Étape finale (ne sert qu’à copier le build, pas à servir)
 FROM alpine:latest
 WORKDIR /dist
-COPY --from=builder /app/build ./
+COPY --from=builder /app/dist ./

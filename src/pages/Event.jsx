@@ -17,22 +17,22 @@ import { convertTimeFromMillisecondsToFormatted } from "../utils/time";
 import {toast} from "react-toastify";
 
 const fetchEvent = async (id) => {
-    const { data } = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}`, {
-        headers: { Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}` },
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
     });
     return data;
 };
 
 const fetchLapTimes = async (id) => {
-    const { data } = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}/results`, {
-        headers: { Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}` },
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/results`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
     });
     return data;
 };
 
 const fetchEventUsers = async (id) => {
-    const { data } = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}/users`, {
-        headers: { Authorization: `Bearer ${process.env.REACT_APP_SEEK_AND_STOCK_API_TOKEN}` },
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/users`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
     });
     return data;
 };
@@ -60,7 +60,7 @@ const Event = () => {
 
     const registerMutation = useMutation({
         mutationFn: async () => {
-            await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}/register`, {}, {
+            await axios.post(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/register`, {}, {
                 headers: { Authorization: `Bearer ${authToken}` },
             });
         },
@@ -76,7 +76,7 @@ const Event = () => {
 
     const unregisterMutation = useMutation({
         mutationFn: async () => {
-            await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events/${id}/unregister`, {}, {
+            await axios.post(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/unregister`, {}, {
                 headers: { Authorization: `Bearer ${authToken}` },
             });
         },
