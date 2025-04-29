@@ -2,7 +2,6 @@ import React from 'react';
 import {truncateString} from "../utils/stringUtils";
 
 const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
-    console.log(lapTimes)
     return (
         <div>
             <div className="flex">
