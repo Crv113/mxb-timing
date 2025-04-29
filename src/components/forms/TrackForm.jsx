@@ -8,7 +8,7 @@ import {useMutation} from "@tanstack/react-query";
 
 const createTrack = async ({authToken, formData}) => {
     const { data } = await axios.post(
-        `${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks`,
+        `${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/tracks`,
         formData,
         {
             withCredentials: true,
@@ -21,7 +21,7 @@ const createTrack = async ({authToken, formData}) => {
 
 const updateTrack = async ({authToken, id, formData}) => {
     const { data } = await axios.post(
-        `${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/tracks/${id}`,
+        `${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/tracks/${id}`,
         formData,
         {
             withCredentials: true,
@@ -79,7 +79,7 @@ const TrackForm = ({ initialData = {}, onSuccess, onCancel, isEdit = false }) =>
 
     const onSubmit = async (data) => {
         if (isSubmitting || updateTrackMutation.isPending || createTrackMutation.isPending) return;
-        const maxFileSize = Number(process.env.REACT_APP_MAX_FILE_SIZE);
+        const maxFileSize = Number(import.meta.env.VITE_MAX_FILE_SIZE);
 
         const image = data.image?.[0];
         if (image && image.size > maxFileSize) {

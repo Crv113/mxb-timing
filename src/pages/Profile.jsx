@@ -5,7 +5,7 @@ import {useMutation} from "@tanstack/react-query";
 import {toast} from "react-toastify";
 
 const updateUserGuid = async ({ guid, authToken }) => {
-    await axios.put(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {guid}, {
+    await axios.put(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, {guid}, {
         withCredentials: true,
         headers: {
             Authorization: `Bearer ${authToken}`,

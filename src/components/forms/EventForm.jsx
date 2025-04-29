@@ -10,7 +10,7 @@ import {useMutation} from "@tanstack/react-query";
 const createEvent = async ({authToken, postData}) => {
     
     const { data } = await axios.post(
-        `${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/events`,
+        `${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events`,
         postData,
         {
             withCredentials: true,
@@ -59,7 +59,7 @@ const EventForm = ({tracks, onSuccess, onCancel}) => {
     
     const onSubmit = async (data) => {
         if (createEventMutation.isPending) return;
-        const maxFileSize = Number(process.env.REACT_APP_MAX_FILE_SIZE);
+        const maxFileSize = Number(import.meta.env.VITE_MAX_FILE_SIZE);
         const image = data.image?.[0];
 
         if (image && image.size > maxFileSize) {

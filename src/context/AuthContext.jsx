@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         }
         
         try {
-            const {data: fetchedUser} = await axios.get(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user`, {
+            const {data: fetchedUser} = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_SEEK_AND_STOCK_API_URL}/user/logout`, {}, {
+            await axios.post(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user/logout`, {}, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
