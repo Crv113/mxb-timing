@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "../components/Loading";
 import DesktopLapTimeTable from "../components/DesktopLapTimeTable";
@@ -8,10 +8,7 @@ import MobileLapTimeTable from "../components/MobileLapTimeTable";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { DateTime } from "luxon";
 import {FaFlagCheckered, FaRegFlag} from "react-icons/fa";
-import Button from "../components/Button";
-import { MdDownloadDone } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
-import { RxCross1 } from "react-icons/rx";
 import { SlLocationPin } from "react-icons/sl";
 import { convertTimeFromMillisecondsToFormatted } from "../utils/time";
 import {toast} from "react-toastify";
@@ -30,19 +27,12 @@ const fetchLapTimes = async (id) => {
     return data;
 };
 
-const fetchEventUsers = async (id) => {
-    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/users`, {
-        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
-    });
-    return data;
-};
-
 const Event = () => {
     const { id } = useParams();
-    const queryClient = useQueryClient();
-    const { user, isUserAuthenticated, authToken } = useAuth();
+    const { user, isUserAuthenticated } = useAuth();
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
-
+    const [isCurrentEvent, setIsCurrentEvent] = useState(false);
+    
     const { data: event, isLoading: isEventLoading, isError: isEventError } = useQuery({
         queryKey: ["event", id],
         queryFn: () => fetchEvent(id),
@@ -53,51 +43,32 @@ const Event = () => {
         queryFn: () => fetchLapTimes(id),
     });
 
-    const { data: guids, isLoading: isGuidsLoading, isError: isGuidsError = [] } = useQuery({
-        queryKey: ["eventUsers", id],
-        queryFn: () => fetchEventUsers(id),
-    });
+    const { startingDate, endingDate } = useMemo(() => {
+        if (!event) return { startingDate: null, endingDate: null };
+        return {
+            startingDate: DateTime.fromFormat(event.starting_date, 'yyyy-MM-dd HH:mm:ss'),
+            endingDate: DateTime.fromFormat(event.ending_date, 'yyyy-MM-dd HH:mm:ss'),
+        };
+    }, [event]);
 
-    const registerMutation = useMutation({
-        mutationFn: async () => {
-            await axios.post(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/register`, {}, {
-                headers: { Authorization: `Bearer ${authToken}` },
+    useEffect(() => {
+        if (startingDate && endingDate) {
+            const now = DateTime.now();
+            setIsCurrentEvent(now >= startingDate && now <= endingDate);
+        }
+    }, [startingDate, endingDate]);
+
+    useEffect(() => {
+        if (isUserAuthenticated && user && !user.guid && isCurrentEvent ) {
+            toast.info("Please enter your GUID in your profile.", {
+                icon: () => "⚠️",
             });
-        },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries(["eventUsers", id]);
-            await queryClient.invalidateQueries(["lapTimes", id]);
-            toast.info("You have joined the event", {
-                icon: () => "🎉",
-            });
+        }
+    }, [isUserAuthenticated, user, isCurrentEvent]);
 
-        },
-    });
+    if (isEventLoading || isLapTimesLoading) return <Loading>Loading ..</Loading>;
+    if (isEventError || isLapTimesError) return <p>Failed to fetch data</p>;
 
-    const unregisterMutation = useMutation({
-        mutationFn: async () => {
-            await axios.post(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/unregister`, {}, {
-                headers: { Authorization: `Bearer ${authToken}` },
-            });
-        },
-        onSuccess: async () => {
-           await queryClient.invalidateQueries(["eventUsers", id]);
-           await queryClient.invalidateQueries(["lapTimes", id]);
-            toast.info("You have left the event", {
-                icon: () => "👋",
-            });
-
-        },
-    });
-
-    if (isEventLoading || isLapTimesLoading || isGuidsLoading) return <Loading>Loading ..</Loading>;
-    if (isEventError || isLapTimesError || isGuidsError) return <p>Failed to fetch data</p>;
-
-    const startingDate = DateTime.fromFormat(event.starting_date, 'yyyy-MM-dd HH:mm:ss');
-    const endingDate = DateTime.fromFormat(event.ending_date, 'yyyy-MM-dd HH:mm:ss');
-    const now = DateTime.now();
-    const isCurrentEvent = now >= startingDate && now <= endingDate;
-    const isSubscribe = user ? guids.includes(user.guid) : false;
 
     return (
         <>
@@ -117,16 +88,6 @@ const Event = () => {
                         <FaFlagCheckered />
                         <span className="text-sm md:text-md">{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
                     </div>
-                    {(isUserAuthenticated && isCurrentEvent && !isSubscribe) && (
-                        <Button icon={MdDownloadDone} color="secondary" className="w-fit" onClick={() => registerMutation.mutate()}>
-                            Join event
-                        </Button>
-                    )}
-                    {(isUserAuthenticated && isCurrentEvent && isSubscribe) && (
-                        <Button icon={RxCross1} color="primary" className="w-fit" onClick={() => unregisterMutation.mutate()}>
-                            Leave event
-                        </Button>
-                    )}
                 </div>
             </div>
             {isLargeScreen ? (

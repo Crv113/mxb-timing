@@ -30,11 +30,10 @@ const Home = () => {
                 <div className="flex flex-col lg:w-1/2 lg:justify-center">
                     <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-outfitBlack mb-4 lg:mb-6">How it work's</h1>
                     <p className="font-outfitRegular mb-4 lg:mb-6 md:text-lg">
-                        Join the Mx Bikes server "mxbtiming.com". Wait for the race to start.  
-                        Try to set your best possible time. Once the race is over, the server needs to be restarted for the times to be saved.
+                        If you haven’t already, log in with Discord on our website and add your GUID to your profile.
                         <br/>
-                        If you haven’t already, log in with Discord on our website and add your GUID to your profile. 
-                        Then go to the event you want to join and click "Join Event". If you’ve already set a lap time, it will show up — if not, go ride!
+                        Check if there is an ongoing event.
+                        If you’ve already set a lap time, it will appear — if not, go ride on mxbtiming.com on the event track!
                     </p>
                 </div>
     
@@ -49,7 +48,7 @@ const Home = () => {
             <div className="mt-6">
                 <div className="flex flex-col lg:justify-center">
                     <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-outfitBlack mb-4 lg:mb-6">What's next ?</h1>
-                    <p className="font-outfitRegular mb-4 lg:mb-6 md:text-lg">
+                    <div className="font-outfitRegular mb-4 lg:mb-6 md:text-lg">
                         MXB Timing is a hobby project developed by a single person. 
                         Many features are still missing to make the experience more enjoyable, which is why it's currently only in Alpha.
                         <br/>
@@ -57,12 +56,12 @@ const Home = () => {
                         Here are some of the planned features for the future:
                         <br/>
                         <ul className="list-disc list-inside space-y-2">
-                            <li>Retrieve lap times from an Open Practice session to avoid restarts and waiting for a race to end.</li>
+                            <li><del>Retrieve lap times from an Open Practice session to avoid restarts and waiting for a race to end.</del> - DONE ✅</li>
                             <li>Add player statistics.</li>
                             <li>Create event duo.</li>
                             <li>Implement a voting system to choose the track for upcoming events.</li>
                         </ul>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
