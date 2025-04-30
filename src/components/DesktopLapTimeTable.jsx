@@ -1,5 +1,6 @@
 import React from 'react';
 import {truncateString} from "../utils/stringUtils";
+import {isWithinLastTwoHours} from "../utils/time";
 
 const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
     return (
@@ -25,7 +26,14 @@ const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted})
                             <tr key={lapTime.id} className="border-b border-blue-gray-200 hover:cursor-default">
                                 <td className="py-3 px-4">{index + 1}</td>
                                 <td className="py-3 px-4 text-nowrap" title={lapTime.player_name}>{truncateString(lapTime.player_name)}</td>
-                                <td className="py-3 px-4 font-semibold">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}</td>
+                                <td className="py-3 px-4 font-semibold relative">
+                                    {convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}
+                                    {isWithinLastTwoHours(lapTime.created_at) && (
+                                        <span className="absolute top-1 text-red-500 text-xxs font-bold">
+                                            NEW
+                                        </span>
+                                    )}
+                                </td>
                                 <td className="py-3 px-4">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time_sector_1)}</td>
                                 <td className="py-3 px-4">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time_sector_2)}</td>
                                 <td className="py-3 px-4">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time_sector_3)}</td>

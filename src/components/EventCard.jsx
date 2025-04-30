@@ -4,6 +4,7 @@ import {DateTime} from "luxon";
 import {FaFlagCheckered, FaRegFlag} from "react-icons/fa";
 import {GrStatusGoodSmall} from "react-icons/gr";
 import {SlLocationPin} from "react-icons/sl";
+import {GoTrophy} from "react-icons/go";
 
 const EventCard = ({ event, status = 'current'}) => {
     const startingDate = DateTime.fromFormat(event.starting_date, 'yyyy-MM-dd HH:mm:ss');
@@ -62,6 +63,15 @@ const EventCard = ({ event, status = 'current'}) => {
                             <span className="text-xs">{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
                         </div>
                     </div>
+                    {
+                        status === "finished" &&
+                        <div className="flex flex-row pt-2 gap-2">
+                            <div className="flex items-center gap-2">
+                                <GoTrophy />
+                                <span className="text-xs">{event.best_lap_time.player_name}</span>
+                            </div>
+                        </div>
+                    }
                 </div>
             </li>
         </Link>
@@ -69,3 +79,4 @@ const EventCard = ({ event, status = 'current'}) => {
 };
 
 export default EventCard;
+

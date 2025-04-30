@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthContext";
 import { SlLocationPin } from "react-icons/sl";
 import { convertTimeFromMillisecondsToFormatted } from "../utils/time";
 import {toast} from "react-toastify";
+import {GoTrophy} from "react-icons/go";
 
 const fetchEvent = async (id) => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}`, {
@@ -32,6 +33,7 @@ const Event = () => {
     const { user, isUserAuthenticated } = useAuth();
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
     const [isCurrentEvent, setIsCurrentEvent] = useState(false);
+    const [isFinishedEvent, setIsFinishedEvent] = useState(false);
     
     const { data: event, isLoading: isEventLoading, isError: isEventError } = useQuery({
         queryKey: ["event", id],
@@ -55,6 +57,7 @@ const Event = () => {
         if (startingDate && endingDate) {
             const now = DateTime.now();
             setIsCurrentEvent(now >= startingDate && now <= endingDate);
+            setIsFinishedEvent( now > endingDate);
         }
     }, [startingDate, endingDate]);
 
@@ -88,6 +91,13 @@ const Event = () => {
                         <FaFlagCheckered />
                         <span className="text-sm md:text-md">{endingDate.toFormat("ccc dd LLL yyyy HH:mm")}</span>
                     </div>
+                    {
+                        isFinishedEvent &&
+                        <div className="flex items-center gap-2">
+                            <GoTrophy />
+                            <span className="text-sm md:text-md">{event.best_lap_time.player_name}</span>
+                        </div>
+                    }
                 </div>
             </div>
             {isLargeScreen ? (

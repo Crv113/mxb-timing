@@ -18,3 +18,17 @@ export function convertTimeFromMillisecondsToFormatted(ms) {
 
     return `${minutes}.${seconds}.${milliseconds}`;
 }
+
+export function isWithinLastTwoHours(createdAtString) {
+    const createdAt = new Date(createdAtString);
+    const now = new Date();
+    
+    console.log(createdAt)
+    console.log(now)
+    
+
+    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000); // 2h en millisecondes
+
+    console.log(createdAt >= twoHoursAgo && createdAt <= now)
+    return createdAt >= twoHoursAgo && createdAt <= now;
+}

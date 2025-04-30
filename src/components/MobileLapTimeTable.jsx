@@ -1,5 +1,6 @@
 import React from 'react';
 import {truncateString} from "../utils/stringUtils";
+import {isWithinLastTwoHours} from "../utils/time";
 
 const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
 
@@ -28,7 +29,14 @@ const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) 
                                 <tr>
                                     <td className="text-left pl-2">{index + 1}</td>
                                     <td className="w-1/3 text-left pl-2">{truncateString(lapTime.player_name)}</td>
-                                    <td className="w-1/3 text-center font-semibold">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}</td>
+                                    <td className="w-1/3 text-center font-semibold relative">
+                                        {convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}
+                                        {isWithinLastTwoHours(lapTime.created_at) && (
+                                            <span className="absolute -top-1 text-red-500 text-[6px] font-bold">
+                                            NEW
+                                        </span>
+                                        )}
+                                    </td>
                                     <td className="w-1/3 text-right pr-2">
                                          <span
                                              className={`bg-${lapTime.bike.name.split(" ")[0].toLowerCase()} 
