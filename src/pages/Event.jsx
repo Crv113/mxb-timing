@@ -34,7 +34,7 @@ const Event = () => {
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
     const [isCurrentEvent, setIsCurrentEvent] = useState(false);
     const [isFinishedEvent, setIsFinishedEvent] = useState(false);
-    
+
     const { data: event, isLoading: isEventLoading, isError: isEventError } = useQuery({
         queryKey: ["event", id],
         queryFn: () => fetchEvent(id),
@@ -95,7 +95,7 @@ const Event = () => {
                         isFinishedEvent &&
                         <div className="flex items-center gap-2">
                             <GoTrophy />
-                            <span className="text-sm md:text-md">{event.best_lap_time.player_name}</span>
+                            <span className="text-sm md:text-md">{event.best_lap_time?.player_name}</span>
                         </div>
                     }
                 </div>
