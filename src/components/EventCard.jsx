@@ -68,7 +68,7 @@ const EventCard = ({ event, status = 'current'}) => {
                         <div className="flex flex-row pt-2 gap-2">
                             <div className="flex items-center gap-2">
                                 <GoTrophy />
-                                <span className="text-xs">{event.best_lap_time?.player_name}</span>
+                                <span className="text-xs">{event.best_lap_time ? event.best_lap_time.player_name : '-'}</span>
                             </div>
                         </div>
                     }

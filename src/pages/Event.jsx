@@ -95,7 +95,7 @@ const Event = () => {
                         isFinishedEvent &&
                         <div className="flex items-center gap-2">
                             <GoTrophy />
-                            <span className="text-sm md:text-md">{event.best_lap_time?.player_name}</span>
+                            <span className="text-sm md:text-md">{event.best_lap_time ? event.best_lap_time.player_name : '-'}</span>
                         </div>
                     }
                 </div>
