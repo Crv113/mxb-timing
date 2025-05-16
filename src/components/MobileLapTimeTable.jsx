@@ -1,6 +1,7 @@
 import React from 'react';
 import {truncateString} from "../utils/stringUtils";
 import {isWithinLastTwoHours} from "../utils/time";
+import {Link} from "react-router-dom";
 
 const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
 
@@ -28,7 +29,9 @@ const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) 
                             <React.Fragment key={lapTime.id}>
                                 <tr>
                                     <td className="text-left pl-2">{index + 1}</td>
-                                    <td className="w-1/3 text-left pl-2">{truncateString(lapTime.player_name)}</td>
+                                    <td className="w-1/3 text-left pl-2">
+                                        <Link to={`/profile/${lapTime.user_id}`}>{truncateString(lapTime.player_name)}</Link>
+                                    </td>
                                     <td className="w-1/3 text-center font-semibold relative">
                                         {convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}
                                         {isWithinLastTwoHours(lapTime.created_at) && (
@@ -39,7 +42,7 @@ const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) 
                                     </td>
                                     <td className="w-1/3 text-right pr-2">
                                          <span
-                                             className={`bg-${lapTime.bike.name.split(" ")[0].toLowerCase()} 
+                                             className={`bg-${lapTime.bike.name.split(" ")[0].toLowerCase()}
                                                     text-white text-xxs font-medium px-2.5 py-0.5 rounded whitespace-nowrap`}
                                          >
                                             {lapTime.bike.name}

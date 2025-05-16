@@ -1,6 +1,7 @@
 import React from 'react';
 import {truncateString} from "../utils/stringUtils";
 import {isWithinLastTwoHours} from "../utils/time";
+import {Link} from "react-router-dom";
 
 const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
     return (
@@ -25,7 +26,11 @@ const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted})
                         {lapTimes.data.map((lapTime, index)=> (
                             <tr key={lapTime.id} className="border-b border-blue-gray-200 hover:cursor-default">
                                 <td className="py-3 px-4">{index + 1}</td>
-                                <td className="py-3 px-4 text-nowrap" title={lapTime.player_name}>{truncateString(lapTime.player_name)}</td>
+                                <td className="py-3 px-4 text-nowrap" title={lapTime.player_name}>
+                                    <Link to={`/profile/${lapTime.user_id}`}>
+                                        {truncateString(lapTime.player_name)}
+                                    </Link>
+                                </td>
                                 <td className="py-3 px-4 font-semibold relative">
                                     {convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}
                                     {isWithinLastTwoHours(lapTime.created_at) && (
@@ -41,7 +46,7 @@ const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted})
                                 <td className="py-3 px-4 hidden lg:table-cell text-nowrap">{lapTime.bike.category.name}</td>
                                 <td className="py-3 px-4">
                                     <span
-                                        className={`bg-${lapTime.bike.name.split(" ")[0].toLowerCase()} 
+                                        className={`bg-${lapTime.bike.name.split(" ")[0].toLowerCase()}
                                         text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded whitespace-nowrap`}
                                     >
                                         {lapTime.bike.name}

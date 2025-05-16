@@ -34,12 +34,12 @@ const Sidebar = () => {
             )}
 
             <div
-                className={`fixed top-0 left-0 bg-slate-50 text-slate-700 flex flex-col p-5 z-10 overflow-y-auto transition-transform duration-300 ${
+                className={`fixed top-0 left-0 bg-slate-50 text-slate-700 flex flex-col p-6 z-10 overflow-y-auto transition-transform duration-300 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 } xl:translate-x-0 w-64`}
                 style={{ height: 'var(--app-height)' }}
             >
-                <img alt={'Logo mxb timing'} className="w-40 mx-auto mb-5" src={'/mxbt2.png'}/>
+                <img alt={'Logo mxb timing'} className="w-40 mx-auto mb-6" src={'/mxbt2.png'}/>
                 <ul className="list-none p-0 flex-grow">
                     <SidebarItem icon={IoHomeOutline} onClick={() => setIsOpen(false)} to="/">Home</SidebarItem>
                     <SidebarItem icon={VscSymbolEvent} onClick={() => setIsOpen(false)} to="/events">Events</SidebarItem>

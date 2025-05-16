@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Events from "./pages/Events";
 import Event from "./pages/Event";
+import PublicProfile from "./pages/PublicProfile";
 import {Settings} from "luxon";
 import Tracks from "./pages/Tracks";
 import Profile from "./pages/Profile";
@@ -29,13 +30,13 @@ function App() {
         window.addEventListener('resize', setVh);
         return () => window.removeEventListener('resize', setVh);
     }, []);
-    
+
   return (
       <AuthProvider>
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-              <div className="flex font-sans" style={{ height: 'var(--app-height)' }}>
+              <div className="flex font-sans min-h-screen">
                   <Sidebar />
-                  <div className="flex-1 p-5 bg-white mt-10 xl:mt-0 xl:ml-64">
+                  <div className="flex-1 p-4 bg-white mt-12 xl:mt-0 xl:ml-64">
                       <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/events" element={<Events />} />
@@ -44,6 +45,7 @@ function App() {
                           </PrivateRoute> } />
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/event/:id" element={<Event />} />
+                          <Route path="/profile/:id" element={<PublicProfile />} />
                           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                       </Routes>
                       <ToastContainer

@@ -8,21 +8,21 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [roles, setRoles] = useState([]);
-    const [isUserLoading, setIsUserLoading] = useState(true); 
+    const [isUserLoading, setIsUserLoading] = useState(true);
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
     const queryClient = useQueryClient();
-    
+
     const updateUser = (newUserData) => {
         setUser((prevUser) => ({ ...prevUser, ...newUserData }));
     };
-    
+
     const cleanUrl = () => {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
-    
+
     const fetchToken = async () => {
-        
+
         const params = new URLSearchParams(window.location.search);
         const urlToken = params.get("token");
 
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
         return localStorage.getItem("authToken"); //authToken || null
     };
-    
+
     const fetchUser = async () => {
         setIsUserLoading(true);
         let token = authToken || localStorage.getItem("authToken");
@@ -43,9 +43,9 @@ export const AuthProvider = ({ children }) => {
             setIsUserLoading(false);
             return;
         }
-        
+
         try {
-            const {data: fetchedUser} = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, {
+            const {data: { data: fetchedUser }} = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
             setRoles(fetchedUser.roles)
         } catch (error) {
             console.error("Failed to fetch user", error);
-            await logout(); 
+            await logout();
         } finally {
             setIsUserLoading(false);
         }
@@ -97,11 +97,12 @@ export const AuthProvider = ({ children }) => {
         })();
     }, []);
 
+
     const isUserAuthenticated = !!user;
     const isAdmin = roles.includes("admin");
 
     return (
-        <AuthContext.Provider value={{ isUserAuthenticated, user, updateUser, logout, isUserLoading, authToken, isAdmin, roles }}>
+        <AuthContext.Provider value={{ isUserAuthenticated, user, updateUser, logout, isUserLoading, authToken, isAdmin, roles, fetchUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -17,7 +17,7 @@ const Home = () => {
                         MXB Timing is still in Alpha
                     </span>
                 </div>
-                
+
                 <div className="flex justify-center my-10 lg:w-1/2">
                     <img
                         src="/home.png"
@@ -36,7 +36,7 @@ const Home = () => {
                         If you’ve already set a lap time, it will appear — if not, go ride on mxbtiming.com on the event track!
                     </p>
                 </div>
-    
+
                 <div className="flex my-10 lg:w-1/2">
                     <img
                         src="/home2.png"
@@ -49,7 +49,7 @@ const Home = () => {
                 <div className="flex flex-col lg:justify-center">
                     <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-outfitBlack mb-4 lg:mb-6">What's next ?</h1>
                     <div className="font-outfitRegular mb-4 lg:mb-6 md:text-lg">
-                        MXB Timing is a hobby project developed by a single person. 
+                        MXB Timing is a hobby project developed by a single person.
                         Many features are still missing to make the experience more enjoyable, which is why it's currently only in Alpha.
                         <br/>
                         <br/>
@@ -57,7 +57,7 @@ const Home = () => {
                         <br/>
                         <ul className="list-disc list-inside space-y-2">
                             <li><del>Retrieve lap times from an Open Practice session to avoid restarts and waiting for a race to end.</del> - DONE ✅</li>
-                            <li>Add player statistics.</li>
+                            <li><del>Add player statistics.</del> - DONE ✅</li>
                             <li>Create event duo.</li>
                             <li>Implement a voting system to choose the track for upcoming events.</li>
                         </ul>
