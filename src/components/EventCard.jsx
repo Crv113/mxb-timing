@@ -9,7 +9,7 @@ import {GoTrophy} from "react-icons/go";
 const EventCard = ({ event, status = 'current'}) => {
     const startingDate = DateTime.fromFormat(event.starting_date, 'yyyy-MM-dd HH:mm:ss');
     const endingDate = DateTime.fromFormat(event.ending_date, 'yyyy-MM-dd HH:mm:ss');
-    
+
     let to;
     let opacity;
     let statusColor;
@@ -21,7 +21,7 @@ const EventCard = ({ event, status = 'current'}) => {
             statusColor = 'text-orange-400';
             disabled = true;
             break;
-            
+
         case 'finished':
             to = `/event/${event.id}`;
             opacity = 'opacity-50';
@@ -68,7 +68,7 @@ const EventCard = ({ event, status = 'current'}) => {
                         <div className="flex flex-row pt-2 gap-2">
                             <div className="flex items-center gap-2">
                                 <GoTrophy />
-                                <span className="text-xs">{event.best_lap_time.player_name}</span>
+                                <span className="text-xs">{event.best_lap_time?.player_name}</span>
                             </div>
                         </div>
                     }
@@ -79,4 +79,3 @@ const EventCard = ({ event, status = 'current'}) => {
 };
 
 export default EventCard;
-

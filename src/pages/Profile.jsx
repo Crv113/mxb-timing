@@ -164,7 +164,6 @@ const Profile = () => {
                             id="guid"
                             readOnly={!isEditingGuid}
                             value={editedGuid}
-                            placeholder={guid ? '' : 'Merci de renseigner votre GUID'}
                             ref={guidInputRef}
                             className={`pr-16 pl-2 py-2 ml-2 rounded-md w-full ${guid ? 'bg-white' : 'bg-red-100'} focus:outline-none border-none ${!isEditingGuid ? 'cursor-default' : ''}`}
                             disabled={mutation.isPending}
