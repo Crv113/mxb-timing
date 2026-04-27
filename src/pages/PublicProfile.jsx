@@ -66,7 +66,7 @@ const PublicProfile = () => {
                     <span className="text-2xl font-bold ml-3 sm:text-3xl">
                         <CountUp end={user.data.victory_count} duration={1.5} />
                     </span>
-                    <p className="text-slate-700 ml-2 sm:text-lg">Victoires</p>
+                    <p className="text-slate-700 ml-2 sm:text-lg">Victories</p>
                 </article>
 
                 <article className="w-full h-[100px] border-2 border-gray-200 rounded-xl mt-4 p-4 flex items-center">
