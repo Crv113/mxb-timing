@@ -22,3 +22,5 @@ yarn.lock
 *.local
 *.log
 coverage/
+
+claude.md
