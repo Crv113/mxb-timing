@@ -1,4 +1,5 @@
 import React from 'react';
+import BestLapTimesByTrackTable from '../components/BestLapTimesByTrackTable';
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -78,6 +79,14 @@ const PublicProfile = () => {
                     </span>
                     <p className="text-slate-700 ml-2">Participations</p>
                 </article>
+            </section>
+
+            <section className='w-full border-2 border-gray-200 mt-4 rounded-xl p-4'>
+                <h2 className="font-bold sm:text-lg">Best lap times</h2>
+                {user.data.best_lap_times_by_track?.length > 0
+                    ? <BestLapTimesByTrackTable lapTimes={user.data.best_lap_times_by_track} />
+                    : <p className='text-center mt-4'>Statistics will appear once the first lap times are recorded.</p>
+                }
             </section>
 
             <section className='w-full border-2 border-gray-200 mt-4 rounded-xl p-4'>

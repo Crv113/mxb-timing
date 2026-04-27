@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
+import BestLapTimesByTrackTable from '../components/BestLapTimesByTrackTable';
 import {useAuth} from "../context/AuthContext";
 import axios from "axios";
 import {useMutation} from "@tanstack/react-query";
@@ -219,6 +220,14 @@ const Profile = () => {
                     </span>
                     <p className="text-slate-700 ml-2">Participations</p>
                 </article>
+            </section>
+
+            <section className='w-full border-2 border-gray-200 mt-4 rounded-xl p-4'>
+                <h2 className="font-bold sm:text-lg">Best lap times</h2>
+                {user.best_lap_times_by_track?.length > 0
+                    ? <BestLapTimesByTrackTable lapTimes={user.best_lap_times_by_track} />
+                    : <p className='text-center mt-4'>Your best lap times will appear here once lap times are recorded.</p>
+                }
             </section>
 
             <section className='w-full border-2 border-gray-200 mt-4 rounded-xl p-4'>
