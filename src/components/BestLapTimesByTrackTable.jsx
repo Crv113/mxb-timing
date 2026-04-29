@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { convertTimeFromMillisecondsToFormatted } from '../utils/time';
 import useMediaQuery from '../hooks/useMediaQuery';
 
@@ -26,7 +27,11 @@ const BestLapTimesByTrackTable = ({ lapTimes }) => {
                     <tbody>
                         {lapTimes.map((lt) => (
                             <tr key={lt.id} className="border-b border-blue-gray-200">
-                                <td className="py-3 px-4">{lt.event.track.name}</td>
+                                <td className="py-3 px-4">
+                                    <Link to={`/track/${lt.event.track.id}`} className="hover:underline">
+                                        {lt.event.track.name}
+                                    </Link>
+                                </td>
                                 <td className="py-3 px-4 font-semibold">{convertTimeFromMillisecondsToFormatted(lt.lap_time)}</td>
                                 <td className="py-3 px-4">{convertTimeFromMillisecondsToFormatted(lt.lap_time_sector_1)}</td>
                                 <td className="py-3 px-4">{convertTimeFromMillisecondsToFormatted(lt.lap_time_sector_2)}</td>
@@ -63,7 +68,11 @@ const BestLapTimesByTrackTable = ({ lapTimes }) => {
                     {lapTimes.map((lt) => (
                         <React.Fragment key={lt.id}>
                             <tr>
-                                <td className="w-1/3 text-left pl-2">{lt.event.track.name}</td>
+                                <td className="w-1/3 text-left pl-2">
+                                    <Link to={`/track/${lt.event.track.id}`} className="hover:underline">
+                                        {lt.event.track.name}
+                                    </Link>
+                                </td>
                                 <td className="w-1/3 text-center font-semibold">{convertTimeFromMillisecondsToFormatted(lt.lap_time)}</td>
                                 <td className="w-1/3 text-right pr-2">
                                     <span className={`bg-${lt.bike.name.split(' ')[0].toLowerCase()} text-white text-xxs font-medium px-2.5 py-0.5 rounded whitespace-nowrap`}>

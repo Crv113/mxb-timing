@@ -8,6 +8,7 @@ import Event from "./pages/Event";
 import PublicProfile from "./pages/PublicProfile";
 import {Settings} from "luxon";
 import Tracks from "./pages/Tracks";
+import TrackDetail from "./pages/TrackDetail";
 import Profile from "./pages/Profile";
 import {AuthProvider} from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
@@ -46,6 +47,7 @@ function App() {
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="/profile/:id" element={<PublicProfile />} />
+                          <Route path="/track/:id" element={<TrackDetail />} />
                           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                       </Routes>
                       <ToastContainer

@@ -75,7 +75,7 @@ const Event = () => {
 
     return (
         <>
-            <div className="flex mb-5">
+            <div className="flex">
                 <img src={event.track.image} alt="event image" className="w-32 h-32 md:w-44 md:h-44 bg-neutral-800" />
                 <div className="pl-2 md:space-y-1">
                     <h1 className="md:text-3xl font-semibold">{event.name}</h1>

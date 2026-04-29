@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
     return (
-        <div>
+        <div className='mt-3'>
             <div className="flex">
                 <div className="overflow-x-auto rounded-2xl border text-sm w-full">
                     <table className="w-full">

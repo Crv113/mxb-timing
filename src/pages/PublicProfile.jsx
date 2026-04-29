@@ -85,7 +85,7 @@ const PublicProfile = () => {
                 <h2 className="font-bold sm:text-lg">Best lap times</h2>
                 {user.data.best_lap_times_by_track?.length > 0
                     ? <BestLapTimesByTrackTable lapTimes={user.data.best_lap_times_by_track} />
-                    : <p className='text-center mt-4'>Statistics will appear once the first lap times are recorded.</p>
+                    : <p className='text-center mt-4'>Your best lap times will appear here once lap times are recorded.</p>
                 }
             </section>
 
