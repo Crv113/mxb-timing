@@ -41,9 +41,7 @@ function App() {
                       <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/events" element={<Events />} />
-                          <Route path="/tracks" element={<PrivateRoute role="admin">
-                              <Tracks />
-                          </PrivateRoute> } />
+                          <Route path="/tracks" element={<Tracks />} />
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="/profile/:id" element={<PublicProfile />} />

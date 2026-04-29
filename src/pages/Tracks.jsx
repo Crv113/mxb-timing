@@ -8,6 +8,7 @@ import TrackCard from "../components/TrackCard";
 import TrackForm from "../components/forms/TrackForm";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {toast} from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 const fetchTracks = async () => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/tracks`, {
         headers: {
@@ -19,6 +20,7 @@ const fetchTracks = async () => {
 
 const Tracks = () => {
     const queryClient = useQueryClient()
+    const { isAdmin } = useAuth();
     
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -55,12 +57,12 @@ const Tracks = () => {
     return (
         <div>
             <section className="pb-5">
-                <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsCreateModalOpen(true)}>Track</Button>
+                {isAdmin && <Button icon={AiOutlinePlus} color="primary" className="float-end" onClick={() => setIsCreateModalOpen(true)}>Track</Button>}
                 
                 <h1 className="text-2xl font-outfitMedium text-neutral-950 pb-5">Tracks</h1>
                 <ul className="flex gap-6 flex-wrap justify-center md:justify-normal">
                     {tracks.map(track => (
-                        <TrackCard key={track.id} track={track} onClick={() => handleTrackClick(track)}/>
+                        <TrackCard key={track.id} track={track} isAdmin={isAdmin} onEdit={() => handleTrackClick(track)} />
                     ))}
                 </ul>
             </section>
