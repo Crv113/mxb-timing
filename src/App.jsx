@@ -8,6 +8,7 @@ import Event from "./pages/Event";
 import PublicProfile from "./pages/PublicProfile";
 import {Settings} from "luxon";
 import Tracks from "./pages/Tracks";
+import Users from "./pages/Users";
 import TrackDetail from "./pages/TrackDetail";
 import Profile from "./pages/Profile";
 import {AuthProvider} from "./context/AuthContext";
@@ -42,6 +43,7 @@ function App() {
                           <Route path="/" element={<Home />} />
                           <Route path="/events" element={<Events />} />
                           <Route path="/tracks" element={<Tracks />} />
+                          <Route path="/users" element={<Users />} />
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="/profile/:id" element={<PublicProfile />} />
