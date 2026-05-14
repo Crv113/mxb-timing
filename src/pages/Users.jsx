@@ -27,7 +27,7 @@ const Users = () => {
                 <table className="w-full">
                     <thead className="border-b bg-neutral-50">
                         <tr className="text-gray-700">
-                            <th className="py-3 px-4 text-left">Player</th>
+                            <th className="py-3 px-4 text-left">Name</th>
                             <th className="py-3 px-4 text-left">Participations</th>
                             <th className="py-3 px-4 text-left">Victories</th>
                             <th className="py-3 px-4 text-left">Favorite bike</th>
