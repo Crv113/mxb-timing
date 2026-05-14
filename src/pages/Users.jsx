@@ -28,6 +28,9 @@ const Users = () => {
                     <thead className="border-b bg-neutral-50">
                         <tr className="text-gray-700">
                             <th className="py-3 px-4 text-left">Player</th>
+                            <th className="py-3 px-4 text-left">Participations</th>
+                            <th className="py-3 px-4 text-left">Victories</th>
+                            <th className="py-3 px-4 text-left">Favorite bike</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +46,15 @@ const Users = () => {
                                         />
                                         <span>{user.name || user.discord_global_name}</span>
                                     </Link>
+                                </td>
+                                <td className="py-3 px-4">{user.participation_count}</td>
+                                <td className="py-3 px-4">{user.victory_count}</td>
+                                <td className="py-3 px-4">
+                                    {user.favorite_bike ? (
+                                        <span className={`bg-${user.favorite_bike.split(' ')[0].toLowerCase()} text-white text-xs font-medium px-2.5 py-0.5 rounded whitespace-nowrap`}>
+                                            {user.favorite_bike}
+                                        </span>
+                                    ) : '-'}
                                 </td>
                             </tr>
                         ))}
