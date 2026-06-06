@@ -8,6 +8,7 @@ import {useAuth} from "../context/AuthContext";
 import {IoIosWarning, IoMdExit} from "react-icons/io";
 import {NavLink} from "react-router-dom";
 import {SlLocationPin} from "react-icons/sl";
+import {getDisplayName} from "../utils/displayName";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +57,7 @@ const Sidebar = () => {
                                     alt="Avatar"
                                     className={'w-8 rounded-full'}
                                 />
-                                <span className={'font-semibold'}>{user.discord_global_name}</span>
+                                <span className={'font-semibold'}>{getDisplayName(user)}</span>
                                 {!user.guid && <IoIosWarning className="text-red-600 text-xl" />}
                             </div>
                         </NavLink>

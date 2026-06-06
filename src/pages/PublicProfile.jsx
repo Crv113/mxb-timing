@@ -7,6 +7,7 @@ import { GoPeople, GoTrophy } from "react-icons/go";
 import PieChartMotos from '../components/charts/PieChartMotos';
 import CountUp from 'react-countup';
 import Loading from "../components/Loading";
+import { getDisplayName } from "../utils/displayName";
 
 
 const fetchUser = async (id) => {
@@ -43,7 +44,7 @@ const PublicProfile = () => {
 
                 <article className="ml-4 flex flex-col text-slate-700">
                     <div className='flex items-center'>
-                        <p className='text-2xl mt-4 font-semibold sm:text-3xl'>{user.data.name || user.data.discord_global_name}</p>
+                        <p className='text-2xl mt-4 font-semibold sm:text-3xl'>{getDisplayName(user.data)}</p>
                     </div>
 
                     {/* <div className={'flex items-center relative text-xs'}>

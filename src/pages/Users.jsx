@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Loading from '../components/Loading';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { getDisplayName } from '../utils/displayName';
 
 const fetchUsers = async () => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/users`, {
@@ -20,7 +21,7 @@ const UserAvatar = ({ user }) => (
             className="w-8 h-8 rounded-full"
             onError={(e) => { e.target.src = '/default-avatar.png'; }}
         />
-        <span>{user.name || user.discord_global_name}</span>
+        <span>{getDisplayName(user)}</span>
     </Link>
 );
 

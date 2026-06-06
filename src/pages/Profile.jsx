@@ -9,6 +9,7 @@ import {IoCameraOutline} from "react-icons/io5";
 import { GoPeople, GoTrophy, GoX, GoCheck } from "react-icons/go";
 import PieChartMotos from '../components/charts/PieChartMotos';
 import CountUp from 'react-countup';
+import { getDisplayName } from '../utils/displayName';
 
 const updateUserInfo = async ({ guid, name, authToken }) => {
     const payload = {};
@@ -67,9 +68,9 @@ const Profile = () => {
             setEditedGuid(user.guid)
         };
 
-        if ((user?.name === null || user?.name === undefined) && user?.discord_global_name) {
-            setName(user.discord_global_name);
-            setEditedName(user.discord_global_name);
+        if ((user?.name === null || user?.name === undefined) && (user?.discord_global_name || user?.discord_username)) {
+            setName(getDisplayName(user));
+            setEditedName(getDisplayName(user));
         } else if (user?.name && name !== user.name) {
             setName(user.name);
             setEditedName(user.name);
