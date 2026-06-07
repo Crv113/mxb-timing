@@ -17,12 +17,13 @@ const updateUserInfo = async ({ guid, name, authToken }) => {
     if (guid !== undefined) payload.guid = guid;
     if (name !== undefined) payload.name = name;
 
-    await axios.put(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, payload, {
+    const response = await axios.put(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, payload, {
         withCredentials: true,
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
     });
+    return response.data;
 }
 
 const Profile = () => {
@@ -40,13 +41,14 @@ const Profile = () => {
 
     const mutation = useMutation({
         mutationFn: updateUserInfo,
-        onSuccess: (_, variables) => {
+        onSuccess: (data, variables) => {
             if ('guid' in variables) setGuid(variables.guid);
             if ('name' in variables) setName(variables.name);
             setIsEditingGuid(false);
             setIsEditingName(false);
             fetchUser();
             toast.info("User information updated successfully.");
+            if (data?.merged === true) toast.success("Your lap times have been retrieved.");
         },
         onError: (error) => {
             if (error.response?.status === 422) {
