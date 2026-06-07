@@ -30,7 +30,7 @@ const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) 
                                 <tr>
                                     <td className="text-left pl-2">{index + 1}</td>
                                     <td className="w-1/3 text-left pl-2">
-                                        <Link to={`/profile/${lapTime.user_id}`}>{truncateString(lapTime.player_name)}</Link>
+                                        <Link to={lapTime.user_id ? `/profile/${lapTime.user_id}` : `/player/${lapTime.player_guid}`}>{truncateString(lapTime.player_name)}</Link>
                                     </td>
                                     <td className="w-1/3 text-center font-semibold relative">
                                         {convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}

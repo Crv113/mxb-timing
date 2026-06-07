@@ -27,7 +27,7 @@ const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted})
                             <tr key={lapTime.id} className="border-b border-blue-gray-200 hover:cursor-default">
                                 <td className="py-3 px-4">{index + 1}</td>
                                 <td className="py-3 px-4 text-nowrap" title={lapTime.player_name}>
-                                    <Link to={`/profile/${lapTime.user_id}`}>
+                                    <Link to={lapTime.user_id ? `/profile/${lapTime.user_id}` : `/player/${lapTime.player_guid}`}>
                                         {truncateString(lapTime.player_name)}
                                     </Link>
                                 </td>
