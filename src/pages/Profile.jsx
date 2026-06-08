@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
+import Loading from '../components/Loading';
 import BestLapTimesByTrackTable from '../components/BestLapTimesByTrackTable';
 import {useAuth} from "../context/AuthContext";
 import axios from "axios";
@@ -79,8 +80,8 @@ const Profile = () => {
         }
     }, [user, guid, name]);
 
-    if(isUserLoading) return <h1>Chargement...</h1>;
-    if(!isUserAuthenticated) return <h1>non connecté</h1>;
+    if(isUserLoading) return <Loading>Loading ..</Loading>;
+    if(!isUserAuthenticated) return <p className='text-center mt-4'>Not authenticated.</p>;
 
     const handleGuidCheck = () => {
         const trimmed = editedGuid.trim();
