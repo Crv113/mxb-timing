@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { GoPeople, GoTrophy } from "react-icons/go";
+import { FaDiscord } from "react-icons/fa";
 import PieChartMotos from '../components/charts/PieChartMotos';
 import CountUp from 'react-countup';
 import Loading from "../components/Loading";
@@ -43,8 +44,10 @@ const PublicProfile = () => {
                 </figure>
 
                 <article className="ml-4 flex flex-col text-slate-700">
-                    <div className='flex items-center'>
-                        <p className='text-2xl mt-4 font-semibold sm:text-3xl'>{getDisplayName(user.data)}</p>
+                    <p className='text-2xl mt-4 font-semibold sm:text-3xl'>{getDisplayName(user.data)}</p>
+                    <div className='flex items-center gap-1 mt-1 text-xs text-indigo-500 border border-indigo-200 rounded-full px-2 py-1 w-fit'>
+                        <FaDiscord className="w-4 h-4" />
+                        <span>Linked with Discord</span>
                     </div>
 
                     {/* <div className={'flex items-center relative text-xs'}>

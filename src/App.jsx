@@ -49,7 +49,7 @@ function App() {
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="/profile/:id" element={<PublicProfile />} />
                           <Route path="/track/:id" element={<TrackDetail />} />
-                          <Route path="/player/:guid" element={<AnonymousProfile />} />
+                          <Route path="/player/:id" element={<AnonymousProfile />} />
                           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                       </Routes>
                       <ToastContainer
