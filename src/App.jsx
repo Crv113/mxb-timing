@@ -11,6 +11,7 @@ import Tracks from "./pages/Tracks";
 import Users from "./pages/Users";
 import TrackDetail from "./pages/TrackDetail";
 import Profile from "./pages/Profile";
+import AnonymousProfile from "./pages/AnonymousProfile";
 import {AuthProvider} from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import { ToastContainer } from 'react-toastify';
@@ -48,6 +49,7 @@ function App() {
                           <Route path="/event/:id" element={<Event />} />
                           <Route path="/profile/:id" element={<PublicProfile />} />
                           <Route path="/track/:id" element={<TrackDetail />} />
+                          <Route path="/player/:id" element={<AnonymousProfile />} />
                           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                       </Routes>
                       <ToastContainer

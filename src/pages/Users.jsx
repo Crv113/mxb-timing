@@ -5,6 +5,8 @@ import axios from 'axios';
 import Loading from '../components/Loading';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { getDisplayName } from '../utils/displayName';
+import { FaDiscord } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 
 const fetchUsers = async () => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/users`, {
@@ -13,15 +15,31 @@ const fetchUsers = async () => {
     return data;
 };
 
-const UserAvatar = ({ user }) => (
-    <Link to={`/profile/${user.id}`} className="flex items-center space-x-3">
+const fetchAnonymousPlayers = async () => {
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/players`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
+    });
+    return data;
+};
+
+const PlayerCell = ({ player, isAdmin }) => (
+    <Link
+        to={player.type === 'user' ? `/profile/${player.id}` : `/player/${player.id}`}
+        className="flex items-center space-x-3"
+    >
         <img
-            src={`https://cdn.discordapp.com/avatars/${user.discord_id}/${user.discord_avatar}.png`}
+            src={player.type === 'user'
+                ? `https://cdn.discordapp.com/avatars/${player.discord_id}/${player.discord_avatar}.png`
+                : '/default-avatar.png'
+            }
             alt="avatar"
             className="w-8 h-8 rounded-full"
             onError={(e) => { e.target.src = '/default-avatar.png'; }}
         />
-        <span>{getDisplayName(user)}</span>
+        <span>{player.type === 'user' ? getDisplayName(player) : player.player_name}</span>
+        {isAdmin && player.type === 'user' &&
+            <FaDiscord className="w-3 h-3 text-indigo-400 shrink-0" title="Linked with Discord" />
+        }
     </Link>
 );
 
@@ -33,14 +51,25 @@ const BikeBadge = ({ bike }) => bike ? (
 
 const Users = () => {
     const isLargeScreen = useMediaQuery('(min-width: 768px)');
+    const { isAdmin } = useAuth();
 
-    const { data: users, isLoading, isError } = useQuery({
+    const { data: users, isLoading: isUsersLoading, isError: isUsersError } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
     });
 
-    if (isLoading) return <Loading>Loading ..</Loading>;
-    if (isError) return <p>Failed to fetch users</p>;
+    const { data: anonymousPlayers, isLoading: isAnonLoading, isError: isAnonError } = useQuery({
+        queryKey: ['anonymous-players'],
+        queryFn: fetchAnonymousPlayers,
+    });
+
+    if (isUsersLoading || isAnonLoading) return <Loading>Loading ..</Loading>;
+    if (isUsersError || isAnonError) return <p>Failed to fetch players</p>;
+
+    const allPlayers = [
+        ...(users ?? []).map(u => ({ ...u, type: 'user', favorite_bike: u.favorite_bike })),
+        ...(anonymousPlayers ?? []).map(a => ({ ...a, type: 'anonymous' })),
+    ].sort((a, b) => b.participation_count - a.participation_count);
 
     return (
         <div>
@@ -69,23 +98,23 @@ const Users = () => {
                         )}
                     </thead>
                     <tbody>
-                        {users.map((user) => (
+                        {allPlayers.map((player) => (
                             isLargeScreen ? (
-                                <tr key={user.id} className="border-b border-blue-gray-200 hover:bg-neutral-50">
-                                    <td className="py-3 px-4"><UserAvatar user={user} /></td>
-                                    <td className="py-3 px-4">{user.participation_count}</td>
-                                    <td className="py-3 px-4">{user.victory_count}</td>
-                                    <td className="py-3 px-4"><BikeBadge bike={user.favorite_bike} /></td>
+                                <tr key={`${player.type}-${player.id}`} className="border-b border-blue-gray-200 hover:bg-neutral-50">
+                                    <td className="py-3 px-4"><PlayerCell player={player} isAdmin={isAdmin} /></td>
+                                    <td className="py-3 px-4">{player.participation_count}</td>
+                                    <td className="py-3 px-4">{player.victory_count}</td>
+                                    <td className="py-3 px-4"><BikeBadge bike={player.favorite_bike} /></td>
                                 </tr>
                             ) : (
-                                <React.Fragment key={user.id}>
+                                <React.Fragment key={`${player.type}-${player.id}`}>
                                     <tr>
-                                        <td className="pt-2 px-3"><UserAvatar user={user} /></td>
-                                        <td className="pt-2 px-3 text-right"><BikeBadge bike={user.favorite_bike} /></td>
+                                        <td className="pt-2 px-3"><PlayerCell player={player} isAdmin={isAdmin} /></td>
+                                        <td className="pt-2 px-3 text-right"><BikeBadge bike={player.favorite_bike} /></td>
                                     </tr>
                                     <tr className="border-b border-blue-gray-200 text-xs text-neutral-400">
-                                        <td className="pb-2 px-3">{user.participation_count} participations</td>
-                                        <td className="pb-2 px-3 text-right">{user.victory_count} victories</td>
+                                        <td className="pb-2 px-3">{player.participation_count} participations</td>
+                                        <td className="pb-2 px-3 text-right">{player.victory_count} victories</td>
                                     </tr>
                                 </React.Fragment>
                             )

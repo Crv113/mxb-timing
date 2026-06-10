@@ -30,7 +30,7 @@ const fetchLapTimes = async (id) => {
 
 const Event = () => {
     const { id } = useParams();
-    const { user, isUserAuthenticated } = useAuth();
+    const { user, isUserAuthenticated, isAdmin } = useAuth();
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
     const [isCurrentEvent, setIsCurrentEvent] = useState(false);
     const [isFinishedEvent, setIsFinishedEvent] = useState(false);
@@ -101,9 +101,9 @@ const Event = () => {
                 </div>
             </div>
             {isLargeScreen ? (
-                <DesktopLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} />
+                <DesktopLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} isAdmin={isAdmin} currentUserId={user?.id} />
             ) : (
-                <MobileLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} />
+                <MobileLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} isAdmin={isAdmin} currentUserId={user?.id} />
             )}
         </>
     );

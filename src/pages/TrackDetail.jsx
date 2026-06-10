@@ -7,6 +7,7 @@ import DesktopLapTimeTable from '../components/DesktopLapTimeTable';
 import MobileLapTimeTable from '../components/MobileLapTimeTable';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { convertTimeFromMillisecondsToFormatted } from '../utils/time';
+import { useAuth } from '../context/AuthContext';
 
 const fetchTrack = async (id) => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/tracks/${id}`, {
@@ -25,6 +26,7 @@ const fetchTrackResults = async (id) => {
 const TrackDetail = () => {
     const { id } = useParams();
     const isLargeScreen = useMediaQuery('(min-width: 1024px)');
+    const { isAdmin, user } = useAuth();
 
     const { data: track, isLoading: isTrackLoading, isError: isTrackError } = useQuery({
         queryKey: ['track', id],
@@ -61,8 +63,8 @@ const TrackDetail = () => {
                 <h2 className='font-bold sm:text-lg'>Lap times</h2>
                 {results?.data?.length > 0 ? (
                     isLargeScreen
-                        ? <DesktopLapTimeTable lapTimes={results} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} />
-                        : <MobileLapTimeTable lapTimes={results} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} />
+                        ? <DesktopLapTimeTable lapTimes={results} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} isAdmin={isAdmin} currentUserId={user?.id} />
+                        : <MobileLapTimeTable lapTimes={results} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} isAdmin={isAdmin} currentUserId={user?.id} />
                 ) : (
                     <p className='text-center mt-4'>No lap times recorded on this track yet.</p>
                 )}

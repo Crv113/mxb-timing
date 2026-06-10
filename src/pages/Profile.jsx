@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
+import Loading from '../components/Loading';
 import BestLapTimesByTrackTable from '../components/BestLapTimesByTrackTable';
 import {useAuth} from "../context/AuthContext";
 import axios from "axios";
@@ -17,12 +18,13 @@ const updateUserInfo = async ({ guid, name, authToken }) => {
     if (guid !== undefined) payload.guid = guid;
     if (name !== undefined) payload.name = name;
 
-    await axios.put(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, payload, {
+    const response = await axios.put(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/user`, payload, {
         withCredentials: true,
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
     });
+    return response.data;
 }
 
 const Profile = () => {
@@ -40,13 +42,14 @@ const Profile = () => {
 
     const mutation = useMutation({
         mutationFn: updateUserInfo,
-        onSuccess: (_, variables) => {
+        onSuccess: (data, variables) => {
             if ('guid' in variables) setGuid(variables.guid);
             if ('name' in variables) setName(variables.name);
             setIsEditingGuid(false);
             setIsEditingName(false);
             fetchUser();
             toast.info("User information updated successfully.");
+            if (data?.merged === true) toast.success("Your lap times have been retrieved.");
         },
         onError: (error) => {
             if (error.response?.status === 422) {
@@ -77,8 +80,8 @@ const Profile = () => {
         }
     }, [user, guid, name]);
 
-    if(isUserLoading) return <h1>Chargement...</h1>;
-    if(!isUserAuthenticated) return <h1>non connecté</h1>;
+    if(isUserLoading) return <Loading>Loading ..</Loading>;
+    if(!isUserAuthenticated) return <p className='text-center mt-4'>Not authenticated.</p>;
 
     const handleGuidCheck = () => {
         const trimmed = editedGuid.trim();

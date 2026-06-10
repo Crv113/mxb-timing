@@ -2,8 +2,9 @@ import React from 'react';
 import {truncateString} from "../utils/stringUtils";
 import {isWithinLastTwoHours} from "../utils/time";
 import {Link} from "react-router-dom";
+import { FaDiscord } from 'react-icons/fa';
 
-const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
+const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted, isAdmin = false, currentUserId = null}) => {
 
     return (
         <div>
@@ -27,10 +28,13 @@ const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) 
                         <tbody className="text-blue-gray-900 hover:cursor-default">
                         {lapTimes.data.map((lapTime, index) => (
                             <React.Fragment key={lapTime.id}>
-                                <tr>
+                                <tr style={currentUserId && lapTime.user_id === currentUserId ? {backgroundColor: '#fffacd'} : {}}>
                                     <td className="text-left pl-2">{index + 1}</td>
                                     <td className="w-1/3 text-left pl-2">
-                                        <Link to={`/profile/${lapTime.user_id}`}>{truncateString(lapTime.player_name)}</Link>
+                                        <Link to={lapTime.user_id ? `/profile/${lapTime.user_id}` : `/player/${lapTime.anonymous_user_id}`} className="flex items-center gap-1">
+                                            {truncateString(lapTime.player_name)}
+                                            {isAdmin && lapTime.user_id && <FaDiscord className="w-3 h-3 text-indigo-400 shrink-0" />}
+                                        </Link>
                                     </td>
                                     <td className="w-1/3 text-center font-semibold relative">
                                         {convertTimeFromMillisecondsToFormatted(lapTime.lap_time)}
@@ -49,7 +53,7 @@ const MobileLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) 
                                         </span>
                                     </td>
                                 </tr>
-                                <tr className="border-b border-blue-gray-200 text-xs text-neutral-400">
+                                <tr className="border-b border-blue-gray-200 text-xs text-neutral-400" style={currentUserId && lapTime.user_id === currentUserId ? {backgroundColor: '#fffacd'} : {}}>
                                     <td></td>
                                     <td className="w-1/3 text-left pl-2">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time_sector_1)}</td>
                                     <td className="w-1/3 text-center">{convertTimeFromMillisecondsToFormatted(lapTime.lap_time_sector_2)}</td>
