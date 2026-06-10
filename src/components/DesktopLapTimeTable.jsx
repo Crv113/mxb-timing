@@ -2,8 +2,9 @@ import React from 'react';
 import {truncateString} from "../utils/stringUtils";
 import {isWithinLastTwoHours} from "../utils/time";
 import {Link} from "react-router-dom";
+import { FaDiscord } from 'react-icons/fa';
 
-const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted}) => {
+const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted, isAdmin = false, currentUserId = null}) => {
     return (
         <div className='mt-3'>
             <div className="flex">
@@ -24,11 +25,12 @@ const DesktopLapTimeTable = ({lapTimes, convertTimeFromMillisecondsToFormatted})
                         </thead>
                         <tbody className="text-blue-gray-900">
                         {lapTimes.data.map((lapTime, index)=> (
-                            <tr key={lapTime.id} className="border-b border-blue-gray-200 hover:cursor-default">
+                            <tr key={lapTime.id} className="border-b border-blue-gray-200 hover:cursor-default" style={currentUserId && lapTime.user_id === currentUserId ? {backgroundColor: '#fffacd'} : {}}>
                                 <td className="py-3 px-4">{index + 1}</td>
                                 <td className="py-3 px-4 text-nowrap" title={lapTime.player_name}>
-                                    <Link to={`/profile/${lapTime.user_id}`}>
+                                    <Link to={lapTime.user_id ? `/profile/${lapTime.user_id}` : `/player/${lapTime.anonymous_user_id}`} className="flex items-center gap-1">
                                         {truncateString(lapTime.player_name)}
+                                        {isAdmin && lapTime.user_id && <FaDiscord className="w-3 h-3 text-indigo-400 shrink-0" />}
                                     </Link>
                                 </td>
                                 <td className="py-3 px-4 font-semibold relative">
