@@ -1,11 +1,12 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "../components/Loading";
 import DesktopLapTimeTable from "../components/DesktopLapTimeTable";
 import MobileLapTimeTable from "../components/MobileLapTimeTable";
 import useMediaQuery from "../hooks/useMediaQuery";
+import useInfiniteScrollSentinel from "../hooks/useInfiniteScrollSentinel";
 import { DateTime } from "luxon";
 import {FaFlagCheckered, FaRegFlag} from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
@@ -21,9 +22,10 @@ const fetchEvent = async (id) => {
     return data;
 };
 
-const fetchLapTimes = async (id) => {
+const fetchLapTimes = async (id, cursor) => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/results`, {
         headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
+        params: { cursor },
     });
     return data;
 };
@@ -40,10 +42,28 @@ const Event = () => {
         queryFn: () => fetchEvent(id),
     });
 
-    const { data: lapTimes, isLoading: isLapTimesLoading, isError: isLapTimesError = [] } = useQuery({
+    const {
+        data: lapTimesPages,
+        isLoading: isLapTimesLoading,
+        isError: isLapTimesError,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useInfiniteQuery({
         queryKey: ["lapTimes", id],
-        queryFn: () => fetchLapTimes(id),
+        queryFn: ({ pageParam }) => fetchLapTimes(id, pageParam),
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.next_cursor ?? undefined,
     });
+
+    const lapTimes = useMemo(() => ({
+        data: lapTimesPages ? lapTimesPages.pages.flatMap((page) => page.data) : [],
+    }), [lapTimesPages]);
+
+    const sentinelRef = useInfiniteScrollSentinel(
+        useCallback(() => fetchNextPage(), [fetchNextPage]),
+        hasNextPage && !isFetchingNextPage
+    );
 
     const { startingDate, endingDate } = useMemo(() => {
         if (!event) return { startingDate: null, endingDate: null };
@@ -105,6 +125,8 @@ const Event = () => {
             ) : (
                 <MobileLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} isAdmin={isAdmin} currentUserId={user?.id} />
             )}
+            <div ref={sentinelRef} />
+            {isFetchingNextPage && <Loading>Loading more...</Loading>}
         </>
     );
 };
