@@ -29,7 +29,7 @@ const Sidebar = () => {
         queryFn: fetchServerStatus,
         refetchInterval: 15000,
     });
-    const playersOnline = serverStatus?.players_online ?? null;
+    const playersOnline = serverStatus?.data?.players_online ?? null;
 
     const handleLogin = () => {
         const currentUrl = encodeURIComponent(window.location.href);
