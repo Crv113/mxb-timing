@@ -1,23 +1,26 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Loading from '../components/Loading';
 import useMediaQuery from '../hooks/useMediaQuery';
+import useInfiniteScrollSentinel from '../hooks/useInfiniteScrollSentinel';
 import { getDisplayName } from '../utils/displayName';
 import { FaDiscord } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
-const fetchUsers = async () => {
+const fetchUsers = async (cursor) => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/users`, {
         headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
+        params: { cursor },
     });
     return data;
 };
 
-const fetchAnonymousPlayers = async () => {
+const fetchAnonymousPlayers = async (cursor) => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/players`, {
         headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
+        params: { cursor },
     });
     return data;
 };
@@ -53,23 +56,55 @@ const Users = () => {
     const isLargeScreen = useMediaQuery('(min-width: 768px)');
     const { isAdmin } = useAuth();
 
-    const { data: users, isLoading: isUsersLoading, isError: isUsersError } = useQuery({
-        queryKey: ['users'],
-        queryFn: fetchUsers,
+    const {
+        data: usersPages,
+        isLoading: isUsersLoading,
+        isError: isUsersError,
+        fetchNextPage: fetchNextUsersPage,
+        hasNextPage: hasNextUsersPage,
+        isFetchingNextPage: isFetchingNextUsersPage,
+    } = useInfiniteQuery({
+        queryKey: ['users-list'],
+        queryFn: ({ pageParam }) => fetchUsers(pageParam),
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.next_cursor ?? undefined,
     });
 
-    const { data: anonymousPlayers, isLoading: isAnonLoading, isError: isAnonError } = useQuery({
-        queryKey: ['anonymous-players'],
-        queryFn: fetchAnonymousPlayers,
+    const {
+        data: anonymousPlayersPages,
+        isLoading: isAnonLoading,
+        isError: isAnonError,
+        fetchNextPage: fetchNextAnonymousPlayersPage,
+        hasNextPage: hasNextAnonymousPlayersPage,
+        isFetchingNextPage: isFetchingNextAnonymousPlayersPage,
+    } = useInfiniteQuery({
+        queryKey: ['anonymous-players-list'],
+        queryFn: ({ pageParam }) => fetchAnonymousPlayers(pageParam),
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.next_cursor ?? undefined,
     });
+
+    const hasNextPage = hasNextUsersPage || hasNextAnonymousPlayersPage;
+    const isFetchingNextPage = isFetchingNextUsersPage || isFetchingNextAnonymousPlayersPage;
+
+    const sentinelRef = useInfiniteScrollSentinel(
+        useCallback(() => {
+            if (hasNextUsersPage) fetchNextUsersPage();
+            if (hasNextAnonymousPlayersPage) fetchNextAnonymousPlayersPage();
+        }, [hasNextUsersPage, fetchNextUsersPage, hasNextAnonymousPlayersPage, fetchNextAnonymousPlayersPage]),
+        hasNextPage && !isFetchingNextPage
+    );
 
     if (isUsersLoading || isAnonLoading) return <Loading>Loading ..</Loading>;
     if (isUsersError || isAnonError) return <p>Failed to fetch players</p>;
 
+    const users = usersPages ? usersPages.pages.flatMap((page) => page.data) : [];
+    const anonymousPlayers = anonymousPlayersPages ? anonymousPlayersPages.pages.flatMap((page) => page.data) : [];
+
     const allPlayers = [
-        ...(users ?? []).map(u => ({ ...u, type: 'user', favorite_bike: u.favorite_bike })),
-        ...(anonymousPlayers ?? []).map(a => ({ ...a, type: 'anonymous' })),
-    ].sort((a, b) => b.participation_count - a.participation_count);
+        ...users.map(u => ({ ...u, type: 'user', favorite_bike: u.favorite_bike })),
+        ...anonymousPlayers.map(a => ({ ...a, type: 'anonymous' })),
+    ];
 
     return (
         <div>
@@ -122,6 +157,8 @@ const Users = () => {
                     </tbody>
                 </table>
             </div>
+            <div ref={sentinelRef} />
+            {isFetchingNextPage && <Loading>Loading more...</Loading>}
         </div>
     );
 };
