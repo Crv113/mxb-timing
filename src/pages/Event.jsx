@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { useParams } from "react-router-dom";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "../components/Loading";
 import DesktopLapTimeTable from "../components/DesktopLapTimeTable";
 import MobileLapTimeTable from "../components/MobileLapTimeTable";
+import LapTimeCategoryFilter from "../components/LapTimeCategoryFilter";
 import useMediaQuery from "../hooks/useMediaQuery";
 import useInfiniteScrollSentinel from "../hooks/useInfiniteScrollSentinel";
 import { DateTime } from "luxon";
@@ -22,10 +23,17 @@ const fetchEvent = async (id) => {
     return data;
 };
 
-const fetchLapTimes = async (id, cursor) => {
+const fetchLapTimes = async (id, cursor, categoryId) => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/results`, {
         headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
-        params: { cursor },
+        params: { cursor, category_id: categoryId ?? undefined },
+    });
+    return data;
+};
+
+const fetchEventCategories = async (id) => {
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/events/${id}/categories`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
     });
     return data;
 };
@@ -36,24 +44,32 @@ const Event = () => {
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
     const [isCurrentEvent, setIsCurrentEvent] = useState(false);
     const [isFinishedEvent, setIsFinishedEvent] = useState(false);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
     const { data: event, isLoading: isEventLoading, isError: isEventError } = useQuery({
         queryKey: ["event", id],
         queryFn: () => fetchEvent(id),
     });
 
+    const { data: eventCategories } = useQuery({
+        queryKey: ["event-categories", id],
+        queryFn: () => fetchEventCategories(id),
+    });
+
     const {
         data: lapTimesPages,
         isLoading: isLapTimesLoading,
         isError: isLapTimesError,
+        isFetching: isLapTimesFetching,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey: ["lapTimes", id],
-        queryFn: ({ pageParam }) => fetchLapTimes(id, pageParam),
+        queryKey: ["lapTimes", id, selectedCategoryId],
+        queryFn: ({ pageParam }) => fetchLapTimes(id, pageParam, selectedCategoryId),
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.next_cursor ?? undefined,
+        placeholderData: keepPreviousData,
     });
 
     const lapTimes = useMemo(() => ({
@@ -119,6 +135,14 @@ const Event = () => {
                         </div>
                     }
                 </div>
+            </div>
+            <div className="flex items-center gap-2">
+                <LapTimeCategoryFilter
+                    categories={eventCategories ?? []}
+                    selectedCategoryId={selectedCategoryId}
+                    onSelect={setSelectedCategoryId}
+                />
+                {isLapTimesFetching && !isFetchingNextPage && <span className="text-xs text-neutral-500">Updating...</span>}
             </div>
             {isLargeScreen ? (
                 <DesktopLapTimeTable lapTimes={lapTimes} convertTimeFromMillisecondsToFormatted={convertTimeFromMillisecondsToFormatted} isAdmin={isAdmin} currentUserId={user?.id} />
