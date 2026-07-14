@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
 import SidebarItem from "../components/SidebarItem";
-import {IoClose, IoHomeOutline, IoMenu} from "react-icons/io5";
+import {IoClose, IoHomeOutline, IoMenu, IoPerson} from "react-icons/io5";
 import {VscSymbolEvent} from "react-icons/vsc";
 import {GoPeople} from "react-icons/go";
 import {FaDiscord} from "react-icons/fa";
@@ -11,7 +11,6 @@ import {IoIosWarning, IoMdExit} from "react-icons/io";
 import {NavLink} from "react-router-dom";
 import {SlLocationPin} from "react-icons/sl";
 import {getDisplayName} from "../utils/displayName";
-import {TbWifi} from "react-icons/tb";
 
 const fetchServerStatus = async () => {
     const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/server-status`, {
@@ -67,7 +66,7 @@ const Sidebar = () => {
                 </ul>
                 {playersOnline !== null && (
                     <div className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-600">
-                        <TbWifi className="text-xl text-green-600" />
+                        <IoPerson className="text-xl text-green-600" />
                         <span>{playersOnline} {playersOnline === 1 ? 'player' : 'players'} online</span>
                     </div>
                 )}
