@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
+import {useQuery} from "@tanstack/react-query";
+import axios from "axios";
 import SidebarItem from "../components/SidebarItem";
-import {IoClose, IoHomeOutline, IoMenu} from "react-icons/io5";
+import {IoClose, IoHomeOutline, IoMenu, IoPerson} from "react-icons/io5";
 import {VscSymbolEvent} from "react-icons/vsc";
 import {GoPeople} from "react-icons/go";
 import {FaDiscord} from "react-icons/fa";
@@ -10,9 +12,23 @@ import {NavLink} from "react-router-dom";
 import {SlLocationPin} from "react-icons/sl";
 import {getDisplayName} from "../utils/displayName";
 
+const fetchServerStatus = async () => {
+    const { data } = await axios.get(`${import.meta.env.VITE_SEEK_AND_STOCK_API_URL}/server-status`, {
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_SEEK_AND_STOCK_API_TOKEN}` },
+    });
+    return data;
+};
+
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { isUserAuthenticated, user, logout, isAdmin } = useAuth();
+
+    const { data: serverStatus } = useQuery({
+        queryKey: ["server-status"],
+        queryFn: fetchServerStatus,
+        refetchInterval: 15000,
+    });
+    const playersOnline = serverStatus?.data?.players_online ?? null;
 
     const handleLogin = () => {
         const currentUrl = encodeURIComponent(window.location.href);
@@ -48,7 +64,13 @@ const Sidebar = () => {
                     <SidebarItem icon={SlLocationPin} onClick={() => setIsOpen(false)} to="/tracks">Tracks</SidebarItem>
                     <SidebarItem icon={GoPeople} onClick={() => setIsOpen(false)} to="/users">Players</SidebarItem>
                 </ul>
-                {isUserAuthenticated ? 
+                {playersOnline !== null && (
+                    <div className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-600">
+                        <IoPerson className="text-xl text-green-600" />
+                        <span>{playersOnline} {playersOnline === 1 ? 'player' : 'players'} online</span>
+                    </div>
+                )}
+                {isUserAuthenticated ?
                     <div className={`flex items-center justify-between px-4 py-2 text-sm bg-gray-200 rounded-xl ${!user.guid && 'animate-pulse bg-red-300'}`}>
                         <NavLink to="/profile" onClick={() => setIsOpen(false)}>
                             <div className={'flex items-center space-x-3'}>
