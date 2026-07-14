@@ -6,6 +6,7 @@ import {IoClose, IoHomeOutline, IoMenu, IoPerson} from "react-icons/io5";
 import {VscSymbolEvent} from "react-icons/vsc";
 import {GoPeople} from "react-icons/go";
 import {FaDiscord} from "react-icons/fa";
+import { FaLinkSlash } from "react-icons/fa6";
 import {useAuth} from "../context/AuthContext";
 import {IoIosWarning, IoMdExit} from "react-icons/io";
 import {NavLink} from "react-router-dom";
@@ -70,6 +71,12 @@ const Sidebar = () => {
                         <span>{playersOnline} {playersOnline === 1 ? 'player' : 'players'} online</span>
                     </div>
                 )}
+                {playersOnline === null && (
+                    <div className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-600">
+                        <FaLinkSlash className="text-xl text-red-600" />
+                        <span>server offline</span>
+                    </div>
+                )}
                 {isUserAuthenticated ?
                     <div className={`flex items-center justify-between px-4 py-2 text-sm bg-gray-200 rounded-xl ${!user.guid && 'animate-pulse bg-red-300'}`}>
                         <NavLink to="/profile" onClick={() => setIsOpen(false)}>
@@ -85,15 +92,15 @@ const Sidebar = () => {
                         </NavLink>
                         <IoMdExit onClick={logout} className="text-xl hover:cursor-pointer" />
                     </div>
-                    : 
+                    :
                     <div className={'flex items-center space-x-3 px-4 py-2 text-sm'}>
                         <FaDiscord className="text-xl" />
                         <button onClick={handleLogin}>Login with Discord</button>
                     </div>}
-                
+
             </div>
         </div>
-        
+
     );
 };
 
