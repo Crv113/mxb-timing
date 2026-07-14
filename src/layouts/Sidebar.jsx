@@ -65,13 +65,13 @@ const Sidebar = () => {
                     <SidebarItem icon={SlLocationPin} onClick={() => setIsOpen(false)} to="/tracks">Tracks</SidebarItem>
                     <SidebarItem icon={GoPeople} onClick={() => setIsOpen(false)} to="/users">Players</SidebarItem>
                 </ul>
-                {playersOnline !== null && (
+                {isAdmin && (playersOnline !== null) && (
                     <div className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-600">
                         <IoPerson className="text-xl text-green-600" />
                         <span>{playersOnline} {playersOnline === 1 ? 'player' : 'players'} online</span>
                     </div>
                 )}
-                {playersOnline === null && (
+                {isAdmin && (playersOnline === null) && (
                     <div className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-600">
                         <FaLinkSlash className="text-xl text-red-600" />
                         <span>server offline</span>
